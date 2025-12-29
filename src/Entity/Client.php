@@ -10,11 +10,11 @@ use Doctrine\Common\Collections\Collection;
 #[ORM\Table(name: 'client')]
 class Client extends Utilisateur
 {
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $adresse;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $adresse = null;
 
-    #[ORM\Column(type: 'string', length: 20)]
-    private string $telephone;
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    private ?string $telephone = null;
 
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Reservation::class)]
     private Collection $reservations;
@@ -24,27 +24,24 @@ class Client extends Utilisateur
         $this->reservations = new ArrayCollection();
     }
 
-    // ======================
-    // GETTERS & SETTERS
-    // ======================
-
-    public function getAdresse(): string
+  
+    public function getAdresse(): ?string
     {
         return $this->adresse;
     }
 
-    public function setAdresse(string $adresse): self
+    public function setAdresse(?string $adresse): self
     {
         $this->adresse = $adresse;
         return $this;
     }
 
-    public function getTelephone(): string
+    public function getTelephone(): ?string
     {
         return $this->telephone;
     }
 
-    public function setTelephone(string $telephone): self
+    public function setTelephone(?string $telephone): self
     {
         $this->telephone = $telephone;
         return $this;

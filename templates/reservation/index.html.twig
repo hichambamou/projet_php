@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes réservations - MarokiCars{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-5">{% if 'ROLE_ADMIN' in app.user.roles|default([]) %}Toutes les réservations{% else %}Mes réservations{% endif %}</h1>
+        {% if 'ROLE_CLIENT' in app.user.roles|default([]) %}
+            <a href="{{ path('app_reservation_new') }}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Nouvelle réservation
+            </a>
+        {% endif %}
+    </div>
+    
+    {% if reservations|length > 0 %}
+        <div class="row g-4">
+            {% for reservation in reservations %}
+                <div class="col-md-6">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h5 class="card-title">{{ reservation.voiture.marque }} {{ reservation.voiture.modele }}</h5>
+                                    <p class="text-muted mb-0">{{ reservation.voiture.annee }}</p>
+                                </div>
+                                <span class="badge bg-{{ reservation.statut == 'confirmee' ? 'success' : (reservation.statut == 'annulee' ? 'danger' : 'warning') }}">
+                                    {{ reservation.statut|replace({'_': ' '})|title }}
+                                </span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <p class="mb-1"><i class="bi bi-calendar-event"></i> <strong>Du:</strong> {{ reservation.dateDebut|date('d/m/Y') }}</p>
+                                <p class="mb-0"><i class="bi bi-calendar-check"></i> <strong>Au:</strong> {{ reservation.dateFin|date('d/m/Y') }}</p>
+                            </div>
+                            
+                            {% if 'ROLE_ADMIN' in app.user.roles|default([]) %}
+                                <p class="mb-2"><i class="bi bi-person"></i> <strong>Client:</strong> {{ reservation.client.nom }}</p>
+                            {% endif %}
+                            
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <h4 class="text-primary mb-0">{{ reservation.montant }} MAD</h4>
+                                <div class="btn-group">
+                                    <a href="{{ path('app_reservation_show', {'id': reservation.id}) }}" class="btn btn-outline-primary btn-sm">Voir</a>
+                                    {% if reservation.statut != 'annulee' %}
+                                        <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}" class="btn btn-outline-secondary btn-sm">Modifier</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center">
+            <h4>Aucune réservation</h4>
+            <p>Vous n'avez pas encore de réservations.</p>
+            {% if 'ROLE_CLIENT' in app.user.roles|default([]) %}
+                <a href="{{ path('app_reservation_new') }}" class="btn btn-primary">Créer une réservation</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

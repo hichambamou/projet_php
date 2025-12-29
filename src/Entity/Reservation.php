@@ -22,8 +22,8 @@ class Reservation
     #[ORM\Column(type: 'float')]
     private float $montant;
 
-    #[ORM\Column(type: 'string', length: 50)]
-    private string $statut;
+    #[ORM\Column(type: 'string', length: 50, options: ['default' => 'en_attente'])]
+    private string $statut = 'en_attente';
 
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]

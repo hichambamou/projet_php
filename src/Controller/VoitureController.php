@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/voiture')]
 final class VoitureController extends AbstractController
@@ -26,6 +27,7 @@ final class VoitureController extends AbstractController
     }
 
     #[Route('/new', name: 'app_voiture_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $voiture = new Voiture();
@@ -54,6 +56,7 @@ final class VoitureController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_voiture_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(Request $request, Voiture $voiture, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(VoitureType::class, $voiture);
@@ -72,6 +75,7 @@ final class VoitureController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_voiture_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Voiture $voiture, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$voiture->getId(), $request->getPayload()->getString('_token'))) {

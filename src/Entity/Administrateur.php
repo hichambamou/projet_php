@@ -6,15 +6,11 @@ use App\Repository\AdministrateurRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AdministrateurRepository::class)]
-class Administrateur
+#[ORM\Table(name: 'administrateur')]
+class Administrateur extends Utilisateur
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
-    public function getId(): ?int
+    public function __construct()
     {
-        return $this->id;
+        // Role is automatically set by Doctrine discriminator
     }
 }

@@ -1,11 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Voiture{% endblock %}
+{% block title %}Ajouter une voiture - MarokiCars{% endblock %}
 
 {% block body %}
-    <h1>Create new Voiture</h1>
-
-    {{ include('voiture/_form.html.twig') }}
-
-    <a href="{{ path('app_voiture_index') }}">back to list</a>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="d-flex align-items-center mb-4">
+                <i class="bi bi-plus-circle text-primary me-3" style="font-size: 2.5rem;"></i>
+                <h1 class="mb-0 fw-bold">Ajouter une nouvelle voiture</h1>
+            </div>
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5">
+                    {{ include('voiture/_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

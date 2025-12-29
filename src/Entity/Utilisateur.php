@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'utilisateur')]
@@ -12,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
     'CLIENT' => Client::class,
     'ADMIN' => Administrateur::class
 ])]
-class Utilisateur
+class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -29,7 +31,7 @@ class Utilisateur
     protected string $motDePasse;
 
     // ======================
-    // GETTERS & SETTERS hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+    // GETTERS & SETTERS
     // ======================
 
     public function getId(): ?int
@@ -68,5 +70,28 @@ class Utilisateur
     {
         $this->motDePasse = $motDePasse;
         return $this;
+    }
+
+    // UserInterface methods
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
+
+    public function getRoles(): array
+    {
+        // Get the discriminator value from Doctrine
+        $discriminatorValue = $this instanceof \App\Entity\Administrateur ? 'ADMIN' : 'CLIENT';
+        return [$discriminatorValue === 'ADMIN' ? 'ROLE_ADMIN' : 'ROLE_CLIENT'];
+    }
+
+    public function getPassword(): string
+    {
+        return $this->motDePasse;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
     }
 }

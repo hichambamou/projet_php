@@ -1,9 +1,109 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="text-center">
-    <h1>Location de voitures au Maroc</h1>
-    <p class="lead">Réservez votre voiture facilement</p>
-    <a href="#" class="btn btn-primary btn-lg">Voir les voitures</a>
+<div class="hero-section text-white mb-5">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold mb-3">Location de voitures au Maroc</h1>
+        <p class="lead mb-4">Réservez votre voiture facilement et profitez de votre voyage</p>
+        <a href="{{ path('app_voiture_index') }}" class="btn btn-light btn-lg">
+            <i class="bi bi-arrow-right-circle me-2"></i>Découvrir nos voitures
+        </a>
+    </div>
+</div>
+
+<div class="container">
+    <h2 class="text-center mb-4">Nos véhicules disponibles</h2>
+    
+    {% if voitures|length > 0 %}
+        <div class="row g-4 mb-5">
+            {% for voiture in voitures %}
+                <div class="col-md-4 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="position-relative overflow-hidden">
+                            {% if voiture.photoPrincipale %}
+                                <img src="{{ voiture.photoPrincipale }}" class="card-img-top" alt="{{ voiture.marque }} {{ voiture.modele }}" style="height: 220px; object-fit: cover;">
+                            {% else %}
+                                <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 220px;">
+                                    <i class="bi bi-car-front text-white" style="font-size: 5rem;"></i>
+                                </div>
+                            {% endif %}
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="badge bg-{{ voiture.statut == 'disponible' ? 'success' : (voiture.statut == 'louee' ? 'warning' : 'secondary') }} shadow">
+                                    {{ voiture.statut|replace({'_': ' '})|title }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body d-flex flex-column p-4">
+                            <h5 class="card-title fw-bold mb-2">{{ voiture.marque }} {{ voiture.modele }}</h5>
+                            <p class="text-muted mb-3">
+                                <i class="bi bi-calendar3 me-1"></i>{{ voiture.annee }}
+                                {% if voiture.nombrePlaces %}
+                                    <span class="ms-3"><i class="bi bi-people me-1"></i>{{ voiture.nombrePlaces }} places</span>
+                                {% endif %}
+                            </p>
+                            {% if voiture.description %}
+                                <p class="card-text flex-grow-1 text-muted small mb-3">{{ voiture.description|slice(0, 100) }}{% if voiture.description|length > 100 %}...{% endif %}</p>
+                            {% endif %}
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                                    <span class="h4 text-primary mb-0 fw-bold">{{ voiture.prixParJour }} <small class="text-muted fs-6">MAD/jour</small></span>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <a href="{{ path('app_voiture_show', {'id': voiture.id}) }}" class="btn btn-outline-primary">
+                                        <i class="bi bi-eye me-2"></i>Voir détails
+                                    </a>
+                                    {% if voiture.statut == 'disponible' and app.user and 'ROLE_CLIENT' in app.user.roles %}
+                                        <a href="{{ path('app_reservation_new_voiture', {'voitureId': voiture.id}) }}" class="btn btn-primary">
+                                            <i class="bi bi-calendar-check me-2"></i>Réserver maintenant
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mb-5">
+            <a href="{{ path('app_voiture_index') }}" class="btn btn-outline-primary btn-lg">
+                <i class="bi bi-arrow-right-circle me-2"></i>Voir toutes les voitures
+            </a>
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center">
+            <h4>Aucune voiture disponible pour le moment</h4>
+            <p>Revenez bientôt pour découvrir notre flotte de véhicules.</p>
+        </div>
+    {% endif %}
+
+    <div class="row mt-5 mb-5">
+        <div class="col-md-4 text-center mb-4">
+            <div class="p-4 card border-0 shadow-sm h-100">
+                <div class="text-primary mb-3">
+                    <i class="bi bi-shield-check" style="font-size: 3.5rem;"></i>
+                </div>
+                <h4 class="mt-3 fw-bold">Assurance incluse</h4>
+                <p class="text-muted">Tous nos véhicules sont entièrement assurés pour votre tranquillité d'esprit.</p>
+            </div>
+        </div>
+        <div class="col-md-4 text-center mb-4">
+            <div class="p-4 card border-0 shadow-sm h-100">
+                <div class="text-primary mb-3">
+                    <i class="bi bi-clock-history" style="font-size: 3.5rem;"></i>
+                </div>
+                <h4 class="mt-3 fw-bold">Disponibilité 24/7</h4>
+                <p class="text-muted">Réservez et récupérez votre véhicule à tout moment, où que vous soyez.</p>
+            </div>
+        </div>
+        <div class="col-md-4 text-center mb-4">
+            <div class="p-4 card border-0 shadow-sm h-100">
+                <div class="text-primary mb-3">
+                    <i class="bi bi-star-fill" style="font-size: 3.5rem;"></i>
+                </div>
+                <h4 class="mt-3 fw-bold">Véhicules de qualité</h4>
+                <p class="text-muted">Une flotte moderne et bien entretenue pour votre confort et sécurité.</p>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

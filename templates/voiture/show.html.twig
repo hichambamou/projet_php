@@ -1,58 +1,89 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Voiture{% endblock %}
+{% block title %}{{ voiture.marque }} {{ voiture.modele }} - MarokiCars{% endblock %}
 
 {% block body %}
-    <h1>Voiture</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ voiture.id }}</td>
-            </tr>
-            <tr>
-                <th>Marque</th>
-                <td>{{ voiture.marque }}</td>
-            </tr>
-            <tr>
-                <th>Modele</th>
-                <td>{{ voiture.modele }}</td>
-            </tr>
-            <tr>
-                <th>Annee</th>
-                <td>{{ voiture.annee }}</td>
-            </tr>
-            <tr>
-                <th>PrixParJour</th>
-                <td>{{ voiture.prixParJour }}</td>
-            </tr>
-            <tr>
-                <th>Statut</th>
-                <td>{{ voiture.statut }}</td>
-            </tr>
-            <tr>
-                <th>NombrePlaces</th>
-                <td>{{ voiture.nombrePlaces }}</td>
-            </tr>
-            <tr>
-                <th>TypeCarburant</th>
-                <td>{{ voiture.typeCarburant }}</td>
-            </tr>
-            <tr>
-                <th>PhotoPrincipale</th>
-                <td>{{ voiture.photoPrincipale }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ voiture.description }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_voiture_index') }}">back to list</a>
-
-    <a href="{{ path('app_voiture_edit', {'id': voiture.id}) }}">edit</a>
-
-    {{ include('voiture/_delete_form.html.twig') }}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            {% if voiture.photoPrincipale %}
+                <img src="{{ voiture.photoPrincipale }}" class="img-fluid rounded shadow-lg" alt="{{ voiture.marque }} {{ voiture.modele }}" style="border-radius: 1rem;">
+            {% else %}
+                <div class="bg-secondary rounded shadow-lg d-flex align-items-center justify-content-center" style="height: 400px; border-radius: 1rem;">
+                    <i class="bi bi-car-front text-white" style="font-size: 8rem;"></i>
+                </div>
+            {% endif %}
+            
+            {% if voiture.photos|length > 0 %}
+                <div class="row mt-3">
+                    {% for photo in voiture.photos %}
+                        <div class="col-4 mb-2">
+                            <img src="{{ photo.url }}" class="img-fluid rounded" alt="Photo {{ loop.index }}">
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="col-md-6">
+            <h1 class="display-5 fw-bold mb-3">{{ voiture.marque }} {{ voiture.modele }}</h1>
+            
+            <div class="mb-4">
+                <span class="badge bg-{{ voiture.statut == 'disponible' ? 'success' : (voiture.statut == 'louee' ? 'warning' : 'secondary') }} fs-6 mb-3">
+                    {{ voiture.statut|replace({'_': ' '})|title }}
+                </span>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="text-primary mb-0">{{ voiture.prixParJour }} MAD</h3>
+                    <small class="text-muted">par jour</small>
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <h5>Détails du véhicule</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="bi bi-calendar"></i> <strong>Année:</strong> {{ voiture.annee }}</li>
+                    {% if voiture.nombrePlaces %}
+                        <li class="mb-2"><i class="bi bi-people"></i> <strong>Places:</strong> {{ voiture.nombrePlaces }}</li>
+                    {% endif %}
+                    {% if voiture.typeCarburant %}
+                        <li class="mb-2"><i class="bi bi-fuel-pump"></i> <strong>Carburant:</strong> {{ voiture.typeCarburant }}</li>
+                    {% endif %}
+                </ul>
+            </div>
+            
+            {% if voiture.description %}
+                <div class="mb-4">
+                    <h5>Description</h5>
+                    <p>{{ voiture.description }}</p>
+                </div>
+            {% endif %}
+            
+            <div class="d-grid gap-2">
+                {% if voiture.statut == 'disponible' and app.user and 'ROLE_CLIENT' in app.user.roles %}
+                    <a href="{{ path('app_reservation_new_voiture', {'voitureId': voiture.id}) }}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-calendar-check me-2"></i>Réserver maintenant
+                    </a>
+                {% elseif not app.user %}
+                    <a href="{{ path('app_login') }}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Connectez-vous pour réserver
+                    </a>
+                {% endif %}
+                
+                {% if 'ROLE_ADMIN' in app.user.roles|default([]) %}
+                    <a href="{{ path('app_voiture_edit', {'id': voiture.id}) }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-pencil me-2"></i>Modifier
+                    </a>
+                {% endif %}
+                
+                <a href="{{ path('app_voiture_index') }}" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left me-2"></i>Retour à la liste
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
+
