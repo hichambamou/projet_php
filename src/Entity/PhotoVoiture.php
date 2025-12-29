@@ -18,5 +18,36 @@ class PhotoVoiture
 
     #[ORM\ManyToOne(targetEntity: Voiture::class, inversedBy: 'photos')]
     #[ORM\JoinColumn(nullable: false)]
-    private Voiture $voiture;
+    private ?Voiture $voiture = null;
+
+    // ======================
+    // GETTERS & SETTERS
+    // ======================
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getUrl(): string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(string $url): self
+    {
+        $this->url = $url;
+        return $this;
+    }
+
+    public function getVoiture(): ?Voiture
+    {
+        return $this->voiture;
+    }
+
+    public function setVoiture(?Voiture $voiture): self
+    {
+        $this->voiture = $voiture;
+        return $this;
+    }
 }
