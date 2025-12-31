@@ -41,15 +41,19 @@ class RegistrationController extends AbstractController
             $client->setMotDePasse($hashedPassword);
             // Role is automatically set by Doctrine discriminator (CLIENT)
 
-            $entityManager->persist($client);
-            $entityManager->flush();
+            try {
+                $entityManager->persist($client);
+                $entityManager->flush();
 
-            // Auto-login after registration
-            return $userAuthenticator->authenticateUser(
-                $client,
-                $authenticator,
-                $request
-            );
+                // Auto-login after registration
+                return $userAuthenticator->authenticateUser(
+                    $client,
+                    $authenticator,
+                    $request
+                );
+            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
+                $this->addFlash('error', 'Cette adresse email est déjà utilisée. Veuillez en choisir une autre.');
+            }
         }
 
         return $this->render('registration/register.html.twig', [
