@@ -13,24 +13,24 @@ class Reservation
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'date')]
+    #[ORM\Column(name: 'date_debut', type: 'date')]
     private \DateTimeInterface $dateDebut;
 
-    #[ORM\Column(type: 'date')]
+    #[ORM\Column(name: 'date_fin', type: 'date')]
     private \DateTimeInterface $dateFin;
 
-    #[ORM\Column(type: 'float')]
+    #[ORM\Column(name: 'montant', type: 'float')]
     private float $montant;
 
-    #[ORM\Column(type: 'string', length: 50, options: ['default' => 'en_attente'])]
+    #[ORM\Column(name: 'statut', type: 'string', length: 20, columnDefinition: "ENUM('en_attente', 'confirmee', 'annulee') DEFAULT 'en_attente'")]
     private string $statut = 'en_attente';
 
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'reservations')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private ?Client $client = null;
 
     #[ORM\ManyToOne(targetEntity: Voiture::class, inversedBy: 'reservations')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: 'voiture_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private ?Voiture $voiture = null;
 
     // ======================

@@ -15,31 +15,31 @@ class Voiture
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 100)]
+    #[ORM\Column(name: 'marque', type: 'string', length: 100)]
     private string $marque;
 
-    #[ORM\Column(type: 'string', length: 100)]
+    #[ORM\Column(name: 'modele', type: 'string', length: 100)]
     private string $modele;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(name: 'annee', type: 'integer')]
     private int $annee;
 
-    #[ORM\Column(type: 'float')]
+    #[ORM\Column(name: 'prix_par_jour', type: 'float')]
     private float $prixParJour;
 
-    #[ORM\Column(type: 'string', length: 50, options: ['default' => 'disponible'])]
+    #[ORM\Column(name: 'statut', type: 'string', length: 20, columnDefinition: "ENUM('disponible', 'louee', 'maintenance') DEFAULT 'disponible'")]
     private string $statut = 'disponible';
 
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'nombre_places', type: 'integer', nullable: true)]
     private ?int $nombrePlaces = null;
 
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[ORM\Column(name: 'type_carburant', type: 'string', length: 50, nullable: true)]
     private ?string $typeCarburant = null;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(name: 'photo_principale', type: 'string', length: 255, nullable: true)]
     private ?string $photoPrincipale = null;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(name: 'description', type: 'text', nullable: true)]
     private ?string $description = null;
 
     #[ORM\OneToMany(mappedBy: 'voiture', targetEntity: Reservation::class)]

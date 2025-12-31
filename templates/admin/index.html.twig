@@ -1,38 +1,109 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Admin Dashboard{% endblock %}
+{% block title %}Tableau de bord - Administration - MarokiCars{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <h1>Admin Dashboard</h1>
-    <div class="row">
+<!-- Admin Header -->
+<section style="background: var(--dark-gradient); padding: 4rem 0 3rem; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 50%, rgba(102,126,234,0.2) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(240,147,251,0.15) 0%, transparent 50%);"></div>
+    <div class="container position-relative" style="z-index: 1;">
+        <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+            <div style="width: 60px; height: 60px; background: var(--primary-gradient); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+                <i class="bi bi-speedometer2 text-white" style="font-size: 1.75rem;"></i>
+            </div>
+            <div>
+                <h1 class="display-5 fw-bold mb-0" style="color: white;">Tableau de bord</h1>
+                <p class="mb-0" style="color: rgba(255,255,255,0.7);">Bienvenue, {{ app.user.nom }} 👋</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <!-- Quick Actions -->
+    <div class="row g-4 mb-5">
         <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Manage Cars</h5>
-                    <p class="card-text">Add, edit, or delete cars.</p>
-                    <a href="{{ path('app_voiture_index') }}" class="btn btn-primary">Go to Cars</a>
+            <div class="card h-100" style="border-left: 4px solid #667eea;">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center gap-4 mb-4">
+                        <div style="width: 60px; height: 60px; background: var(--primary-gradient); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-car-front-fill text-white" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Gérer les voitures</h5>
+                            <p class="text-muted mb-0 small">Ajouter, modifier ou supprimer</p>
+                        </div>
+                    </div>
+                    <a href="{{ path('app_voiture_index') }}" class="btn btn-primary w-100">
+                        <i class="bi bi-arrow-right me-2"></i>Accéder aux voitures
+                    </a>
                 </div>
             </div>
         </div>
+        
         <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Manage Users</h5>
-                    <p class="card-text">View and manage all users.</p>
-                    <a href="{{ path('app_admin_users') }}" class="btn btn-primary">Go to Users</a>
+            <div class="card h-100" style="border-left: 4px solid #38ef7d;">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center gap-4 mb-4">
+                        <div style="width: 60px; height: 60px; background: var(--success-gradient); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-people-fill text-white" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Gérer les utilisateurs</h5>
+                            <p class="text-muted mb-0 small">Clients et administrateurs</p>
+                        </div>
+                    </div>
+                    <a href="{{ path('app_admin_users') }}" class="btn btn-success w-100">
+                        <i class="bi bi-arrow-right me-2"></i>Accéder aux utilisateurs
+                    </a>
                 </div>
             </div>
         </div>
+        
         <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Reservations</h5>
-                    <p class="card-text">View all reservations.</p>
-                    <a href="{{ path('app_reservation_index') }}" class="btn btn-primary">Go to Reservations</a>
+            <div class="card h-100" style="border-left: 4px solid #f093fb;">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center gap-4 mb-4">
+                        <div style="width: 60px; height: 60px; background: var(--secondary-gradient); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-calendar-check-fill text-white" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Réservations</h5>
+                            <p class="text-muted mb-0 small">Voir toutes les réservations</p>
+                        </div>
+                    </div>
+                    <a href="{{ path('app_reservation_index') }}" class="btn" style="background: var(--secondary-gradient); color: white;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                        <i class="bi bi-arrow-right me-2"></i>Accéder aux réservations
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    
+    <!-- Quick Links -->
+    <div class="card">
+        <div class="card-body p-4">
+            <h5 class="fw-bold mb-4">
+                <i class="bi bi-lightning-charge gradient-text me-2"></i>Actions rapides
+            </h5>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <a href="{{ path('app_voiture_new') }}" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-plus-circle me-2"></i>Ajouter une voiture
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="{{ path('app_admin_create_client') }}" class="btn btn-outline-success w-100">
+                        <i class="bi bi-person-plus me-2"></i>Ajouter un client
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="{{ path('app_admin_create_admin') }}" class="btn btn-outline-secondary w-100">
+                        <i class="bi bi-person-plus-fill me-2"></i>Ajouter un admin
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

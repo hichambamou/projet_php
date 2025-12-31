@@ -1,73 +1,203 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Détails de la réservation - MarokiCars{% endblock %}
+{% block title %}Réservation #{{ reservation.id }} - MarokiCars{% endblock %}
 
 {% block body %}
-<div class="container my-5">
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card shadow">
+<!-- Breadcrumb Header -->
+<section style="background: var(--dark-gradient); padding: 2rem 0; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 50%, rgba(56,239,125,0.15) 0%, transparent 50%);"></div>
+    <div class="container position-relative" style="z-index: 1;">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0" style="background: transparent;">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('home') }}" class="text-decoration-none" style="color: rgba(255,255,255,0.7);">
+                        <i class="bi bi-house-door me-1"></i>Accueil
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ path('app_reservation_index') }}" class="text-decoration-none" style="color: rgba(255,255,255,0.7);">
+                        Réservations
+                    </a>
+                </li>
+                <li class="breadcrumb-item active" style="color: white;">Réservation #{{ reservation.id }}</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="row g-5">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <!-- Reservation Header Card -->
+            <div class="card mb-4">
                 <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-4">
-                        <h2 class="card-title">Réservation #{{ reservation.id }}</h2>
-                        <span class="badge bg-{{ reservation.statut == 'confirmee' ? 'success' : (reservation.statut == 'annulee' ? 'danger' : 'warning') }} fs-6">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+                        <div>
+                            <h2 class="fw-bold mb-1">Réservation #{{ reservation.id }}</h2>
+                            <span class="text-muted">Créée le {{ reservation.dateDebut|date('d M Y') }}</span>
+                        </div>
+                        <span class="badge bg-{{ reservation.statut == 'confirmee' ? 'success' : (reservation.statut == 'annulee' ? 'danger' : 'warning') }} fs-6 px-3 py-2">
+                            <i class="bi bi-{{ reservation.statut == 'confirmee' ? 'check-circle-fill' : (reservation.statut == 'annulee' ? 'x-circle-fill' : 'clock-fill') }} me-2"></i>
                             {{ reservation.statut|replace({'_': ' '})|title }}
                         </span>
                     </div>
                     
-                    <div class="mb-4">
-                        <h5>Véhicule réservé</h5>
-                        <div class="d-flex align-items-center">
+                    <!-- Vehicle Info -->
+                    <div class="p-4 mb-4" style="background: var(--bg-secondary); border-radius: var(--radius-lg);">
+                        <h5 class="fw-bold mb-3">
+                            <i class="bi bi-car-front gradient-text me-2"></i>Véhicule réservé
+                        </h5>
+                        <div class="d-flex flex-wrap align-items-center gap-4">
                             {% if reservation.voiture.photoPrincipale %}
-                                <img src="{{ reservation.voiture.photoPrincipale }}" class="img-thumbnail me-3" style="width: 150px; height: 100px; object-fit: cover;" alt="{{ reservation.voiture.marque }}">
+                                <img src="{{ reservation.voiture.photoPrincipale }}" alt="{{ reservation.voiture.marque }}" style="width: 180px; height: 120px; object-fit: cover; border-radius: var(--radius-md);">
+                            {% else %}
+                                <div style="width: 180px; height: 120px; background: var(--dark-gradient); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-car-front text-white" style="font-size: 3rem; opacity: 0.5;"></i>
+                                </div>
                             {% endif %}
-                            <div>
-                                <h6 class="mb-0">{{ reservation.voiture.marque }} {{ reservation.voiture.modele }}</h6>
-                                <p class="text-muted mb-0">{{ reservation.voiture.annee }}</p>
-                                <a href="{{ path('app_voiture_show', {'id': reservation.voiture.id}) }}" class="btn btn-sm btn-outline-primary mt-2">Voir le véhicule</a>
+                            <div class="flex-grow-1">
+                                <h4 class="fw-bold mb-1">{{ reservation.voiture.marque }} {{ reservation.voiture.modele }}</h4>
+                                <div class="d-flex flex-wrap gap-2 mb-3">
+                                    <span class="badge" style="background: white; color: var(--text-secondary);">
+                                        <i class="bi bi-calendar3 me-1"></i>{{ reservation.voiture.annee }}
+                                    </span>
+                                    {% if reservation.voiture.nombrePlaces %}
+                                    <span class="badge" style="background: white; color: var(--text-secondary);">
+                                        <i class="bi bi-people me-1"></i>{{ reservation.voiture.nombrePlaces }} places
+                                    </span>
+                                    {% endif %}
+                                </div>
+                                <a href="{{ path('app_voiture_show', {'id': reservation.voiture.id}) }}" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-eye me-1"></i>Voir le véhicule
+                                </a>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="row mb-4">
+                    <!-- Dates -->
+                    <div class="row g-4 mb-4">
                         <div class="col-md-6">
-                            <h5>Dates de location</h5>
-                            <p class="mb-1"><i class="bi bi-calendar-event"></i> <strong>Début:</strong> {{ reservation.dateDebut|date('d/m/Y') }}</p>
-                            <p class="mb-0"><i class="bi bi-calendar-check"></i> <strong>Fin:</strong> {{ reservation.dateFin|date('d/m/Y') }}</p>
-                            <p class="text-muted mt-2">
-                                Durée: {{ reservation.dateDebut.diff(reservation.dateFin).days + 1 }} jour(s)
-                            </p>
+                            <div class="card h-100" style="border: 2px solid var(--bg-secondary);">
+                                <div class="card-body p-4">
+                                    <div class="d-flex align-items-center gap-3 mb-3">
+                                        <div style="width: 50px; height: 50px; background: var(--primary-gradient); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center;">
+                                            <i class="bi bi-calendar-event text-white" style="font-size: 1.25rem;"></i>
+                                        </div>
+                                        <div>
+                                            <span class="text-muted small">Date de début</span>
+                                            <h5 class="fw-bold mb-0">{{ reservation.dateDebut|date('d/m/Y') }}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
-                            <h5>Informations</h5>
-                            {% if 'ROLE_ADMIN' in app.user.roles|default([]) %}
-                                <p class="mb-1"><i class="bi bi-person"></i> <strong>Client:</strong> {{ reservation.client.nom }}</p>
-                                <p class="mb-1"><i class="bi bi-envelope"></i> {{ reservation.client.email }}</p>
-                                {% if reservation.client.telephone %}
-                                    <p class="mb-0"><i class="bi bi-telephone"></i> {{ reservation.client.telephone }}</p>
-                                {% endif %}
-                            {% endif %}
-                        </div>
-                    </div>
-                    
-                    <div class="card bg-light mb-4">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">Montant total</h5>
-                                <h3 class="text-primary mb-0">{{ reservation.montant }} MAD</h3>
+                            <div class="card h-100" style="border: 2px solid var(--bg-secondary);">
+                                <div class="card-body p-4">
+                                    <div class="d-flex align-items-center gap-3 mb-3">
+                                        <div style="width: 50px; height: 50px; background: var(--success-gradient); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center;">
+                                            <i class="bi bi-calendar-check text-white" style="font-size: 1.25rem;"></i>
+                                        </div>
+                                        <div>
+                                            <span class="text-muted small">Date de fin</span>
+                                            <h5 class="fw-bold mb-0">{{ reservation.dateFin|date('d/m/Y') }}</h5>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="d-flex gap-2">
-                        {% if reservation.statut != 'annulee' %}
-                            <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}" class="btn btn-primary">Modifier</a>
+                    <div class="text-center p-3" style="background: var(--bg-secondary); border-radius: var(--radius-md);">
+                        <i class="bi bi-clock me-2"></i>
+                        <strong>Durée totale:</strong> {{ reservation.dateDebut.diff(reservation.dateFin).days + 1 }} jour(s)
+                    </div>
+                </div>
+            </div>
+            
+            {% if 'ROLE_ADMIN' in app.user.roles|default([]) %}
+            <!-- Client Information (Admin only) -->
+            <div class="card mb-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">
+                        <i class="bi bi-person gradient-text me-2"></i>Informations du client
+                    </h5>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center gap-3 p-3" style="background: var(--bg-secondary); border-radius: var(--radius-md);">
+                                <i class="bi bi-person-circle" style="font-size: 1.5rem; color: var(--primary-color);"></i>
+                                <div>
+                                    <span class="text-muted small">Nom</span>
+                                    <div class="fw-bold">{{ reservation.client.nom }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center gap-3 p-3" style="background: var(--bg-secondary); border-radius: var(--radius-md);">
+                                <i class="bi bi-envelope" style="font-size: 1.5rem; color: var(--primary-color);"></i>
+                                <div>
+                                    <span class="text-muted small">Email</span>
+                                    <div class="fw-bold">{{ reservation.client.email }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {% if reservation.client.telephone %}
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center gap-3 p-3" style="background: var(--bg-secondary); border-radius: var(--radius-md);">
+                                <i class="bi bi-telephone" style="font-size: 1.5rem; color: var(--primary-color);"></i>
+                                <div>
+                                    <span class="text-muted small">Téléphone</span>
+                                    <div class="fw-bold">{{ reservation.client.telephone }}</div>
+                                </div>
+                            </div>
+                        </div>
                         {% endif %}
-                        <a href="{{ path('app_reservation_index') }}" class="btn btn-outline-secondary">Retour à la liste</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Price Summary -->
+            <div class="card mb-4 position-sticky" style="top: 100px;">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">
+                        <i class="bi bi-receipt gradient-text me-2"></i>Récapitulatif
+                    </h5>
+                    
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Prix par jour</span>
+                            <span class="fw-bold">{{ reservation.voiture.prixParJour }} MAD</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Nombre de jours</span>
+                            <span class="fw-bold">{{ reservation.dateDebut.diff(reservation.dateFin).days + 1 }}</span>
+                        </div>
+                        <hr>
+                    </div>
+                    
+                    <div class="p-4 text-center" style="background: linear-gradient(135deg, var(--bg-secondary) 0%, white 100%); border-radius: var(--radius-md);">
+                        <span class="text-muted small text-uppercase">Montant total</span>
+                        <h2 class="fw-bold mb-0 gradient-text" style="font-size: 2.25rem;">{{ reservation.montant }} <span class="fs-5">MAD</span></h2>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        {% if reservation.statut != 'annulee' %}
+                            <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}" class="btn btn-primary">
+                                <i class="bi bi-pencil me-2"></i>Modifier la réservation
+                            </a>
+                        {% endif %}
+                        <a href="{{ path('app_reservation_index') }}" class="btn btn-outline-primary">
+                            <i class="bi bi-arrow-left me-2"></i>Retour aux réservations
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 {% endblock %}

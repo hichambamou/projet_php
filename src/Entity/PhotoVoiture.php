@@ -13,11 +13,11 @@ class PhotoVoiture
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(name: 'url', type: 'string', length: 255)]
     private string $url;
 
     #[ORM\ManyToOne(targetEntity: Voiture::class, inversedBy: 'photos')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: 'voiture_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private ?Voiture $voiture = null;
 
     // ======================

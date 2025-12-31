@@ -32,6 +32,22 @@ final class ClientController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $hashedPassword = $passwordHasher->hashPassword($client, $client->getMotDePasse());
             $client->setMotDePasse($hashedPassword);
+            
+            // Ensure utilisateur is created
+            $utilisateur = $client->getUtilisateur();
+            if ($utilisateur === null) {
+                $utilisateur = new \App\Entity\Utilisateur();
+                $utilisateur->setNom($client->getNom());
+                $utilisateur->setEmail($client->getEmail());
+                $utilisateur->setMotDePasse($hashedPassword);
+                $utilisateur->setRole('CLIENT');
+                $client->setUtilisateur($utilisateur);
+            }
+            
+            $em->persist($utilisateur);
+            $em->flush(); // Flush to get the ID
+            
+            $client->setId($utilisateur->getId());
             $em->persist($client);
             $em->flush();
             return $this->redirectToRoute('app_client_index', [], Response::HTTP_SEE_OTHER);

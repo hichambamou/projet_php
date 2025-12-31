@@ -3,50 +3,96 @@
 {% block title %}Connexion - MarokiCars{% endblock %}
 
 {% block body %}
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
-            <div class="card shadow-lg border-0">
-                <div class="card-body p-5">
-                    <div class="text-center mb-4">
-                        <i class="bi bi-car-front text-primary" style="font-size: 3rem;"></i>
-                    </div>
-                    <h2 class="card-title text-center mb-4">Connexion</h2>
-                    
-                    {% if error %}
-                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                    {% endif %}
-
-                    {% if app.user %}
-                        <div class="alert alert-info">
-                            Vous êtes connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Déconnexion</a>
-                        </div>
-                    {% else %}
-                        <form method="post">
-                            <div class="mb-3">
-                                <label for="inputEmail" class="form-label">Email</label>
-                                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-                            </div>
-                            <div class="mb-3">
-                                <label for="inputPassword" class="form-label">Mot de passe</label>
-                                <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-                            </div>
-                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-                            <div class="d-grid mb-3">
-                                <button class="btn btn-primary btn-lg" type="submit">
-                                    <i class="bi bi-box-arrow-in-right me-2"></i>Se connecter
-                                </button>
-                            </div>
-                        </form>
-                        
-                        <div class="text-center">
-                            <p class="mb-0">Pas encore de compte ? <a href="{{ path('app_register') }}">Inscrivez-vous</a></p>
-                        </div>
-                    {% endif %}
-                </div>
+<section class="min-h-[calc(100vh-200px)] flex items-center justify-center py-12 px-4">
+    <div class="w-full max-w-md">
+        <div class="text-center mb-8">
+            <div class="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-primary-500/30">
+                <i class="bi bi-car-front-fill text-white text-4xl"></i>
             </div>
+            <h2 class="text-3xl font-bold text-slate-900 mb-2">Bienvenue</h2>
+            <p class="text-slate-600">Connectez-vous à votre compte MarokiCars</p>
+        </div>
+        
+        <div class="card p-8">
+            {% if error %}
+                <div class="alert alert-danger mb-6 flex items-center space-x-2">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <span>{{ error.messageKey|trans(error.messageData, 'security') }}</span>
+                </div>
+            {% endif %}
+
+            {% if app.user %}
+                <div class="alert alert-info mb-6">
+                    <div class="flex items-center space-x-2 mb-3">
+                        <i class="bi bi-info-circle-fill"></i>
+                        <span>Vous êtes connecté en tant que <strong>{{ app.user.userIdentifier }}</strong></span>
+                    </div>
+                    <a href="{{ path('app_logout') }}" class="btn-outline-primary inline-flex items-center space-x-2">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Déconnexion</span>
+                    </a>
+                </div>
+            {% else %}
+                <form method="post" class="space-y-6">
+                    <div>
+                        <label for="inputEmail" class="form-label">
+                            <i class="bi bi-envelope mr-2 text-primary-600"></i>Adresse email
+                        </label>
+                        <input type="email" 
+                               value="{{ last_username }}" 
+                               name="email" 
+                               id="inputEmail" 
+                               class="form-input" 
+                               placeholder="votre@email.com"
+                               autocomplete="email" 
+                               required 
+                               autofocus>
+                    </div>
+                    
+                    <div>
+                        <label for="inputPassword" class="form-label">
+                            <i class="bi bi-lock mr-2 text-primary-600"></i>Mot de passe
+                        </label>
+                        <input type="password" 
+                               name="password" 
+                               id="inputPassword" 
+                               class="form-input" 
+                               placeholder="••••••••"
+                               autocomplete="current-password" 
+                               required>
+                    </div>
+                    
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <button type="submit" class="btn-primary w-full">
+                        <i class="bi bi-box-arrow-in-right mr-2"></i>
+                        <span>Se connecter</span>
+                    </button>
+                </form>
+                
+                <div class="mt-8">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-slate-200"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-4 bg-white text-slate-500">Pas encore de compte ?</span>
+                        </div>
+                    </div>
+                    <a href="{{ path('app_register') }}" class="btn-outline-primary w-full mt-6 text-center">
+                        <i class="bi bi-person-plus mr-2"></i>
+                        <span>Créer un compte</span>
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="text-center mt-6">
+            <a href="{{ path('home') }}" class="text-slate-600 hover:text-primary-600 transition-colors inline-flex items-center space-x-2">
+                <i class="bi bi-arrow-left"></i>
+                <span>Retour à l'accueil</span>
+            </a>
         </div>
     </div>
-</div>
+</section>
 {% endblock %}
