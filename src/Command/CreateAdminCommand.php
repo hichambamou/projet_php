@@ -29,16 +29,10 @@ class CreateAdminCommand extends Command
     protected function configure(): void
     {
         $this
-<<<<<<< HEAD
-            ->addArgument('email', InputArgument::REQUIRED, 'Admin email')
-            ->addArgument('password', InputArgument::REQUIRED, 'Admin password')
-            ->addArgument('nom', InputArgument::OPTIONAL, 'Admin name', 'Admin');
-=======
             ->addArgument('email', InputArgument::REQUIRED, 'Admin email address')
             ->addArgument('password', InputArgument::REQUIRED, 'Admin password (will be hashed)')
             ->addArgument('name', InputArgument::OPTIONAL, 'Admin name', 'Admin')
         ;
->>>>>>> 514af8261acadb94d131b51521506b4e0d153281
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
