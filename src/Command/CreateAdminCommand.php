@@ -38,7 +38,6 @@ class CreateAdminCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-<<<<<<< HEAD
         $email = $input->getArgument('email');
         $plainPassword = $input->getArgument('password');
         $nom = $input->getArgument('nom');
@@ -66,7 +65,6 @@ class CreateAdminCommand extends Command
         return Command::SUCCESS;
     }
 }
-=======
 
         $email = $input->getArgument('email');
         $password = $input->getArgument('password');
@@ -111,4 +109,3 @@ class CreateAdminCommand extends Command
         return Command::SUCCESS;
     }
 }
->>>>>>> 514af8261acadb94d131b51521506b4e0d153281
