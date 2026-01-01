@@ -39,11 +39,25 @@ class RegistrationController extends AbstractController
                 $form->get('motDePasse')->getData()
             );
             $client->setMotDePasse($hashedPassword);
-            // Role is automatically set by Doctrine discriminator (CLIENT)
-
-            try {
-                $entityManager->persist($client);
-                $entityManager->flush();
+            
+            // Ensure utilisateur is created and persisted first
+            $utilisateur = $client->getUtilisateur();
+            if ($utilisateur === null) {
+                $utilisateur = new \App\Entity\Utilisateur();
+                $utilisateur->setNom($client->getNom());
+                $utilisateur->setEmail($client->getEmail());
+                $utilisateur->setMotDePasse($hashedPassword);
+                $utilisateur->setRole('CLIENT');
+                $client->setUtilisateur($utilisateur);
+            }
+            
+            $entityManager->persist($utilisateur);
+            $entityManager->flush(); // Flush to get the ID
+            
+            // Set the client ID to match utilisateur ID
+            $client->setId($utilisateur->getId());
+            $entityManager->persist($client);
+            $entityManager->flush();
 
                 // Auto-login after registration
                 return $userAuthenticator->authenticateUser(

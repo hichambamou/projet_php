@@ -10,6 +10,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'utilisateur')]
+<<<<<<< HEAD
+=======
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name: 'role', type: 'string')]
 #[ORM\DiscriminatorMap([
@@ -20,6 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     fields: ['email'],
     message: 'Cette adresse email est déjà utilisée.'
 )]
+>>>>>>> 896dabf16dcb436a647a083fe5d04991f362a9d6
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -27,14 +30,17 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'integer')]
     protected ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 100)]
+    #[ORM\Column(name: 'nom', type: 'string', length: 100)]
     protected string $nom;
 
-    #[ORM\Column(type: 'string', length: 150, unique: true)]
+    #[ORM\Column(name: 'email', type: 'string', length: 150, unique: true)]
     protected string $email;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(name: 'mot_de_passe', type: 'string', length: 255)]
     protected string $motDePasse;
+
+    #[ORM\Column(name: 'role', type: 'string', length: 10, columnDefinition: "ENUM('CLIENT', 'ADMIN') NOT NULL")]
+    protected string $role;
 
     // ======================
     // GETTERS & SETTERS
@@ -84,11 +90,20 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
+    public function getRole(): string
+    {
+        return $this->role;
+    }
+
+    public function setRole(string $role): self
+    {
+        $this->role = $role;
+        return $this;
+    }
+
     public function getRoles(): array
     {
-        // Get the discriminator value from Doctrine
-        $discriminatorValue = $this instanceof \App\Entity\Administrateur ? 'ADMIN' : 'CLIENT';
-        return [$discriminatorValue === 'ADMIN' ? 'ROLE_ADMIN' : 'ROLE_CLIENT'];
+        return [$this->role === 'ADMIN' ? 'ROLE_ADMIN' : 'ROLE_CLIENT'];
     }
 
     public function getPassword(): string

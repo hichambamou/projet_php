@@ -1,45 +1,174 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Manage Users{% endblock %}
+{% block title %}Gestion des utilisateurs - Administration - MarokiCars{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <h1>Manage Users</h1>
-    <a href="{{ path('app_admin_user_new_client') }}" class="btn btn-success mb-3">Add Client</a>
-    <a href="{{ path('app_admin_user_new_admin') }}" class="btn btn-warning mb-3">Add Admin</a>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users %}
-            <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.nom }}</td>
-                <td>{{ user.email }}</td>
-                <td>
-                    {% if user is instanceof('App\\Entity\\Administrateur') %}
-                        Admin
-                    {% else %}
-                        Client
-                    {% endif %}
-                </td>
-                <td>
-                    <a href="{{ path('app_admin_user_edit', {'id': user.id}) }}" class="btn btn-sm btn-primary">Edit</a>
-                    <form method="post" action="{{ path('app_admin_user_delete', {'id': user.id}) }}" style="display: inline;">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-                        <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+<!-- Page Header -->
+<section style="background: var(--dark-gradient); padding: 4rem 0 3rem; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 30% 50%, rgba(56,239,125,0.2) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(102,126,234,0.15) 0%, transparent 50%);"></div>
+    <div class="container position-relative" style="z-index: 1;">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <nav aria-label="breadcrumb" class="mb-3">
+                    <ol class="breadcrumb mb-0" style="background: transparent;">
+                        <li class="breadcrumb-item">
+                            <a href="{{ path('home') }}" class="text-decoration-none" style="color: rgba(255,255,255,0.7);">
+                                <i class="bi bi-house-door me-1"></i>Accueil
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{{ path('app_admin_index') }}" class="text-decoration-none" style="color: rgba(255,255,255,0.7);">
+                                Administration
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active" style="color: white;">Utilisateurs</li>
+                    </ol>
+                </nav>
+                <h1 class="display-4 fw-bold mb-3" style="color: white;">
+                    <i class="bi bi-people me-3" style="color: #38ef7d;"></i>Gestion des utilisateurs
+                </h1>
+                <p class="lead mb-0" style="color: rgba(255,255,255,0.8);">
+                    {{ users|length }} utilisateur{% if users|length > 1 %}s{% endif %} enregistré{% if users|length > 1 %}s{% endif %}
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                <div class="d-flex flex-wrap gap-2 justify-content-lg-end">
+                    <a href="{{ path('app_admin_user_new_client') }}" class="btn btn-light">
+                        <i class="bi bi-person-plus me-2"></i>Ajouter un client
+                    </a>
+                    <a href="{{ path('app_admin_user_new_admin') }}" class="btn" style="background: var(--warning-gradient); color: #1a1a2e;">
+                        <i class="bi bi-person-plus-fill me-2"></i>Ajouter un admin
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <!-- Stats -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card h-100" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); border: 1px solid rgba(102, 126, 234, 0.2);">
+                <div class="card-body p-4 d-flex align-items-center gap-4">
+                    <div style="width: 60px; height: 60px; background: var(--primary-gradient); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-people-fill text-white" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div>
+                        <h3 class="fw-bold mb-0">{{ users|length }}</h3>
+                        <span class="text-muted">Total utilisateurs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100" style="background: linear-gradient(135deg, rgba(17, 153, 142, 0.1) 0%, rgba(56, 239, 125, 0.1) 100%); border: 1px solid rgba(17, 153, 142, 0.2);">
+                <div class="card-body p-4 d-flex align-items-center gap-4">
+                    <div style="width: 60px; height: 60px; background: var(--success-gradient); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-person-check-fill text-white" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div>
+                        <h3 class="fw-bold mb-0">{{ users|filter(u => u is not instanceof('App\\Entity\\Administrateur'))|length }}</h3>
+                        <span class="text-muted">Clients</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100" style="background: linear-gradient(135deg, rgba(247, 151, 30, 0.1) 0%, rgba(255, 210, 0, 0.1) 100%); border: 1px solid rgba(247, 151, 30, 0.2);">
+                <div class="card-body p-4 d-flex align-items-center gap-4">
+                    <div style="width: 60px; height: 60px; background: var(--warning-gradient); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-shield-check" style="font-size: 1.5rem; color: #1a1a2e;"></i>
+                    </div>
+                    <div>
+                        <h3 class="fw-bold mb-0">{{ users|filter(u => u is instanceof('App\\Entity\\Administrateur'))|length }}</h3>
+                        <span class="text-muted">Administrateurs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Users Table -->
+    <div class="card">
+        <div class="card-header bg-white p-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-list-ul gradient-text me-2"></i>Liste des utilisateurs
+                </h5>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">ID</th>
+                            <th>Utilisateur</th>
+                            <th>Email</th>
+                            <th>Rôle</th>
+                            <th class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td class="ps-4">
+                                <span class="badge" style="background: var(--bg-secondary); color: var(--text-secondary);">#{{ user.id }}</span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div style="width: 40px; height: 40px; background: {% if user is instanceof('App\\Entity\\Administrateur') %}var(--warning-gradient){% else %}var(--primary-gradient){% endif %}; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                        <i class="bi bi-person{% if user is instanceof('App\\Entity\\Administrateur') %}-gear{% endif %}" style="color: {% if user is instanceof('App\\Entity\\Administrateur') %}#1a1a2e{% else %}white{% endif %};"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold">{{ user.nom }}</div>
+                                        {% if user.telephone %}
+                                        <small class="text-muted">{{ user.telephone }}</small>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <a href="mailto:{{ user.email }}" class="text-decoration-none">{{ user.email }}</a>
+                            </td>
+                            <td>
+                                {% if user is instanceof('App\\Entity\\Administrateur') %}
+                                    <span class="badge" style="background: var(--warning-gradient); color: #1a1a2e;">
+                                        <i class="bi bi-shield-check me-1"></i>Admin
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-primary">
+                                        <i class="bi bi-person me-1"></i>Client
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="d-flex gap-2 justify-content-end">
+                                    <a href="{{ path('app_admin_user_edit', {'id': user.id}) }}" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form method="post" action="{{ path('app_admin_user_delete', {'id': user.id}) }}" style="display: inline;">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                                        <button class="btn btn-outline-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Back Button -->
+    <div class="mt-4">
+        <a href="{{ path('app_admin_index') }}" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left me-2"></i>Retour au tableau de bord
+        </a>
+    </div>
+</section>
 {% endblock %}

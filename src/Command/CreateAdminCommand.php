@@ -15,6 +15,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 #[AsCommand(
     name: 'app:create-admin',
     description: 'Create an admin user',
+    description: 'Create or update an admin user with a hashed password',
 )]
 class CreateAdminCommand extends Command
 {
@@ -28,14 +29,22 @@ class CreateAdminCommand extends Command
     protected function configure(): void
     {
         $this
+<<<<<<< HEAD
             ->addArgument('email', InputArgument::REQUIRED, 'Admin email')
             ->addArgument('password', InputArgument::REQUIRED, 'Admin password')
             ->addArgument('nom', InputArgument::OPTIONAL, 'Admin name', 'Admin');
+=======
+            ->addArgument('email', InputArgument::REQUIRED, 'Admin email address')
+            ->addArgument('password', InputArgument::REQUIRED, 'Admin password (will be hashed)')
+            ->addArgument('name', InputArgument::OPTIONAL, 'Admin name', 'Admin')
+        ;
+>>>>>>> 514af8261acadb94d131b51521506b4e0d153281
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+<<<<<<< HEAD
         $email = $input->getArgument('email');
         $plainPassword = $input->getArgument('password');
         $nom = $input->getArgument('nom');
@@ -63,3 +72,49 @@ class CreateAdminCommand extends Command
         return Command::SUCCESS;
     }
 }
+=======
+
+        $email = $input->getArgument('email');
+        $password = $input->getArgument('password');
+        $name = $input->getArgument('name');
+
+        // Check if admin already exists
+        $repository = $this->entityManager->getRepository(Administrateur::class);
+        $existingAdmin = $repository->findOneBy(['email' => $email]);
+
+        if ($existingAdmin) {
+            // Update existing admin's password
+            $hashedPassword = $this->passwordHasher->hashPassword($existingAdmin, $password);
+            $existingAdmin->setMotDePasse($hashedPassword);
+            $existingAdmin->setNom($name);
+
+            $this->entityManager->flush();
+
+            $io->success(sprintf('Admin "%s" password has been updated!', $email));
+        } else {
+            // Create new admin
+            $utilisateur = new \App\Entity\Utilisateur();
+            $utilisateur->setEmail($email);
+            $utilisateur->setNom($name);
+            $utilisateur->setRole('ADMIN');
+            
+            $hashedPassword = $this->passwordHasher->hashPassword($utilisateur, $password);
+            $utilisateur->setMotDePasse($hashedPassword);
+            
+            $this->entityManager->persist($utilisateur);
+            $this->entityManager->flush(); // Flush to get the ID
+            
+            $admin = new Administrateur();
+            $admin->setId($utilisateur->getId());
+            $admin->setUtilisateur($utilisateur);
+            
+            $this->entityManager->persist($admin);
+            $this->entityManager->flush();
+
+            $io->success(sprintf('Admin "%s" has been created with ID %d!', $email, $admin->getId()));
+        }
+
+        return Command::SUCCESS;
+    }
+}
+>>>>>>> 514af8261acadb94d131b51521506b4e0d153281

@@ -3,14 +3,30 @@
 {% block title %}Inscription - MarokiCars{% endblock %}
 
 {% block body %}
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-            <div class="card shadow-lg border-0">
-                <div class="card-body p-5">
-                    <div class="text-center mb-4">
-                        <i class="bi bi-person-plus text-primary" style="font-size: 3rem;"></i>
+<section class="min-h-[calc(100vh-200px)] flex items-center justify-center py-12 px-4">
+    <div class="w-full max-w-lg">
+        <div class="text-center mb-8">
+            <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-green-500/30">
+                <i class="bi bi-person-plus-fill text-white text-4xl"></i>
+            </div>
+            <h2 class="text-3xl font-bold text-slate-900 mb-2">Créer un compte</h2>
+            <p class="text-slate-600">Rejoignez MarokiCars et réservez votre véhicule</p>
+        </div>
+        
+        <div class="card p-8">
+            <!-- Steps Indicator -->
+            <div class="flex justify-between mb-8 pb-6 border-b border-slate-200">
+                <div class="text-center flex-1">
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-700 rounded-full flex items-center justify-center mx-auto mb-2 text-white font-semibold text-sm shadow-lg shadow-primary-500/30">
+                        1
                     </div>
+<<<<<<< HEAD
+                    <div class="text-xs text-slate-500">Informations</div>
+                </div>
+                <div class="text-center flex-1">
+                    <div class="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-2 text-slate-500 font-semibold text-sm">
+                        2
+=======
                     <h2 class="card-title text-center mb-4 fw-bold">Créer un compte</h2>
                     
                     {% for message in app.flashes('error') %}
@@ -38,11 +54,81 @@
                     
                     <div class="text-center mt-3">
                         <p class="mb-0">Déjà un compte ? <a href="{{ path('app_login') }}">Connectez-vous</a></p>
+>>>>>>> 896dabf16dcb436a647a083fe5d04991f362a9d6
                     </div>
+                    <div class="text-xs text-slate-500">Confirmation</div>
+                </div>
+                <div class="text-center flex-1">
+                    <div class="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-2 text-slate-500 font-semibold text-sm">
+                        3
+                    </div>
+                    <div class="text-xs text-slate-500">Connexion</div>
                 </div>
             </div>
+            
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'space-y-6'}}) }}
+                <div>
+                    {{ form_label(form.nom, 'Nom complet', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.nom, {'attr': {'class': 'form-input', 'placeholder': 'Votre nom complet'}}) }}
+                    {{ form_errors(form.nom) }}
+                </div>
+                
+                <div>
+                    {{ form_label(form.email, 'Adresse email', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.email, {'attr': {'class': 'form-input', 'placeholder': 'votre@email.com'}}) }}
+                    {{ form_errors(form.email) }}
+                </div>
+                
+                <div>
+                    {{ form_label(form.motDePasse, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.motDePasse, {'attr': {'class': 'form-input', 'placeholder': '••••••••'}}) }}
+                    {{ form_errors(form.motDePasse) }}
+                    <div class="mt-2 text-sm text-slate-500 flex items-center space-x-1">
+                        <i class="bi bi-info-circle"></i>
+                        <span>Minimum 6 caractères</span>
+                    </div>
+                </div>
+                
+                <div>
+                    {{ form_label(form.adresse, 'Adresse', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.adresse, {'attr': {'class': 'form-input', 'placeholder': 'Votre adresse complète'}}) }}
+                    {{ form_errors(form.adresse) }}
+                </div>
+                
+                <div>
+                    {{ form_label(form.telephone, 'Téléphone', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.telephone, {'attr': {'class': 'form-input', 'placeholder': '+212 6XX XXX XXX'}}) }}
+                    {{ form_errors(form.telephone) }}
+                </div>
+                
+                <button type="submit" class="btn-primary w-full">
+                    <i class="bi bi-person-plus mr-2"></i>
+                    <span>Créer mon compte</span>
+                </button>
+            {{ form_end(form) }}
+            
+            <div class="mt-8">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-slate-200"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-4 bg-white text-slate-500">Déjà un compte ?</span>
+                    </div>
+                </div>
+                <a href="{{ path('app_login') }}" class="btn-outline-primary w-full mt-6 text-center">
+                    <i class="bi bi-box-arrow-in-right mr-2"></i>
+                    <span>Se connecter</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="text-center mt-6">
+            <a href="{{ path('home') }}" class="text-slate-600 hover:text-primary-600 transition-colors inline-flex items-center space-x-2">
+                <i class="bi bi-arrow-left"></i>
+                <span>Retour à l'accueil</span>
+            </a>
         </div>
     </div>
-</div>
+</section>
 {% endblock %}
-

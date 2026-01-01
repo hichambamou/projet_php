@@ -1,2 +1,2 @@
 import './styles/app.css';
-import 'bootstrap';
+// Bootstrap removed - using Tailwind CSS instead
