@@ -12,6 +12,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class RegistrationType extends AbstractType
 {
@@ -24,6 +25,12 @@ class RegistrationType extends AbstractType
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Email',
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^[^@]+@gmail\.com$/',
+                        'message' => 'L\'adresse email doit être de la forme nom@gmail.com.'
+                    ])
+                ],
                 'attr' => ['class' => 'form-control']
             ])
             ->add('motDePasse', RepeatedType::class, [
