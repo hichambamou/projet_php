@@ -64,3 +64,4 @@ class RegistrationType extends AbstractType
     }
 }
 
+

@@ -5,9 +5,23 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'utilisateur')]
+<<<<<<< HEAD
+=======
+#[ORM\InheritanceType('JOINED')]
+#[ORM\DiscriminatorColumn(name: 'role', type: 'string')]
+#[ORM\DiscriminatorMap([
+    'CLIENT' => Client::class,
+    'ADMIN' => Administrateur::class
+])]
+#[UniqueEntity(
+    fields: ['email'],
+    message: 'Cette adresse email est déjà utilisée.'
+)]
+>>>>>>> 896dabf16dcb436a647a083fe5d04991f362a9d6
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]

@@ -62,3 +62,4 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
     }
 }
 
+

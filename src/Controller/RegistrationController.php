@@ -59,12 +59,15 @@ class RegistrationController extends AbstractController
             $entityManager->persist($client);
             $entityManager->flush();
 
-            // Auto-login after registration
-            return $userAuthenticator->authenticateUser(
-                $client,
-                $authenticator,
-                $request
-            );
+                // Auto-login after registration
+                return $userAuthenticator->authenticateUser(
+                    $client,
+                    $authenticator,
+                    $request
+                );
+            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
+                $this->addFlash('error', 'Cette adresse email est déjà utilisée. Veuillez en choisir une autre.');
+            }
         }
 
         return $this->render('registration/register.html.twig', [
