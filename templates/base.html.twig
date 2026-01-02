@@ -12,7 +12,7 @@
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚗</text></svg>">
-    
+
     {{ encore_entry_link_tags('app') }}
 </head>
 <body class="h-full flex flex-col">
@@ -83,8 +83,8 @@
                         <a href="{{ path('app_login') }}" class="px-4 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300">
                             Connexion
                         </a>
-                        <a href="{{ path('app_register') }}" class="btn-primary">
-                            <i class="bi bi-person-plus-fill"></i>
+                        <a href="{{ path('app_register') }}" class="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition-all">
+                            <i class="bi bi-person-plus-fill mr-2"></i>
                             Inscription
                         </a>
                     {% endif %}

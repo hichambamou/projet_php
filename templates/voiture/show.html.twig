@@ -4,200 +4,202 @@
 
 {% block body %}
 <!-- Breadcrumb Header -->
-<section style="background: var(--dark-gradient); padding: 2rem 0; position: relative; overflow: hidden;">
-    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 50%, rgba(102,126,234,0.15) 0%, transparent 50%);"></div>
-    <div class="container position-relative" style="z-index: 1;">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-0" style="background: transparent;">
-                <li class="breadcrumb-item">
-                    <a href="{{ path('home') }}" class="text-decoration-none" style="color: rgba(255,255,255,0.7);">
-                        <i class="bi bi-house-door me-1"></i>Accueil
+<section class="hero-section py-10 lg:py-12 relative">
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-4xl">
+            <nav class="mb-6" aria-label="breadcrumb">
+                <ol class="flex items-center space-x-2 text-white/70 text-sm">
+                    <li>
+                        <a href="{{ path('home') }}" class="hover:text-white transition-colors">
+                            <i class="bi bi-house-door mr-1"></i>Accueil
+                        </a>
+                    </li>
+                    <li><i class="bi bi-chevron-right text-xs"></i></li>
+                    <li>
+                        <a href="{{ path('app_voiture_index') }}" class="hover:text-white transition-colors">Voitures</a>
+                    </li>
+                    <li><i class="bi bi-chevron-right text-xs"></i></li>
+                    <li class="text-white">{{ voiture.marque }} {{ voiture.modele }}</li>
+                </ol>
+            </nav>
+
+            <h1 class="text-4xl lg:text-6xl font-bold text-white mb-3">{{ voiture.marque }} {{ voiture.modele }}</h1>
+
+            <div class="flex flex-wrap items-center gap-3">
+                {% if voiture.statut == 'disponible' %}
+                    <span class="badge badge-success">
+                        <i class="bi bi-check-circle-fill mr-2"></i>Disponible
+                    </span>
+                {% elseif voiture.statut == 'louee' %}
+                    <span class="badge badge-warning">
+                        <i class="bi bi-clock-fill mr-2"></i>Louée
+                    </span>
+                {% else %}
+                    <span class="badge badge-danger">
+                        <i class="bi bi-x-circle-fill mr-2"></i>Maintenance
+                    </span>
+                {% endif %}
+
+                {% if 'ROLE_ADMIN' in app.user.roles|default([]) %}
+                    <a href="{{ path('app_voiture_edit', {'id': voiture.id}) }}" class="btn-outline-primary inline-flex items-center space-x-2">
+                        <i class="bi bi-pencil"></i>
+                        <span>Modifier</span>
                     </a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a href="{{ path('app_voiture_index') }}" class="text-decoration-none" style="color: rgba(255,255,255,0.7);">
-                        Voitures
-                    </a>
-                </li>
-                <li class="breadcrumb-item active" style="color: white;">{{ voiture.marque }} {{ voiture.modele }}</li>
-            </ol>
-        </nav>
+                {% endif %}
+            </div>
+        </div>
     </div>
 </section>
 
-<section class="container py-5">
-    <div class="row g-5">
-        <!-- Image Gallery -->
-        <div class="col-lg-6">
-            <div class="position-sticky" style="top: 100px;">
-                {% if voiture.photoPrincipale %}
-                    <div class="card border-0 overflow-hidden mb-4" style="border-radius: var(--radius-xl);">
-                        <img src="{{ voiture.photoPrincipale }}" class="img-fluid" alt="{{ voiture.marque }} {{ voiture.modele }}" style="aspect-ratio: 4/3; object-fit: cover;">
-                    </div>
-                {% else %}
-                    <div class="card border-0 overflow-hidden mb-4" style="border-radius: var(--radius-xl);">
-                        <div class="bg-secondary d-flex align-items-center justify-content-center" style="aspect-ratio: 4/3;">
-                            <i class="bi bi-car-front text-white" style="font-size: 8rem; opacity: 0.5;"></i>
+<section class="py-12 lg:py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <!-- Image Gallery -->
+            <div class="lg:sticky lg:top-24 self-start">
+                <div class="card overflow-hidden">
+                    {% if voiture.photoPrincipale %}
+                        <img src="{{ voiture.photoPrincipale }}" alt="{{ voiture.marque }} {{ voiture.modele }}" class="w-full aspect-[4/3] object-cover">
+                    {% else %}
+                        <div class="w-full aspect-[4/3] bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
+                            <i class="bi bi-car-front text-slate-400" style="font-size: 6rem;"></i>
                         </div>
-                    </div>
-                {% endif %}
-                
+                    {% endif %}
+                </div>
+
                 {% if voiture.photos|length > 0 %}
-                    <div class="row g-3">
+                    <div class="grid grid-cols-4 gap-3 mt-4">
                         {% for photo in voiture.photos|slice(0, 4) %}
-                            <div class="col-3">
-                                <div class="card border-0 overflow-hidden" style="border-radius: var(--radius-md); cursor: pointer;">
-                                    <img src="{{ photo.url }}" class="img-fluid" alt="Photo {{ loop.index }}" style="aspect-ratio: 1; object-fit: cover;">
-                                </div>
+                            <div class="card overflow-hidden">
+                                <img src="{{ photo.url }}" alt="Photo {{ loop.index }}" class="w-full aspect-square object-cover">
                             </div>
                         {% endfor %}
                     </div>
                 {% endif %}
             </div>
-        </div>
-        
-        <!-- Vehicle Details -->
-        <div class="col-lg-6">
-            <!-- Status & Actions -->
-            <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
-                <span class="badge bg-{{ voiture.statut == 'disponible' ? 'success' : (voiture.statut == 'louee' ? 'warning' : 'secondary') }} fs-6">
-                    <i class="bi bi-{{ voiture.statut == 'disponible' ? 'check-circle-fill' : (voiture.statut == 'louee' ? 'clock-fill' : 'x-circle-fill') }} me-2"></i>
-                    {{ voiture.statut|replace({'_': ' '})|title }}
-                </span>
-                {% if 'ROLE_ADMIN' in app.user.roles|default([]) %}
-                <div class="d-flex gap-2">
-                    <a href="{{ path('app_voiture_edit', {'id': voiture.id}) }}" class="btn btn-outline-secondary btn-sm">
-                        <i class="bi bi-pencil me-1"></i>Modifier
-                    </a>
-                </div>
-                {% endif %}
-            </div>
-            
-            <!-- Title -->
-            <h1 class="display-5 fw-bold mb-4">{{ voiture.marque }} {{ voiture.modele }}</h1>
-            
-            <!-- Price Card -->
-            <div class="card mb-4" style="background: linear-gradient(135deg, var(--bg-secondary) 0%, white 100%);">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <span class="text-muted small text-uppercase">Prix par jour</span>
-                            <h2 class="mb-0 fw-bold gradient-text" style="font-size: 2.5rem;">{{ voiture.prixParJour }} <span class="fs-5">MAD</span></h2>
-                        </div>
-                        <div class="text-end">
-                            <span class="badge bg-primary px-3 py-2">
-                                <i class="bi bi-shield-check me-1"></i>Assurance incluse
+
+            <!-- Vehicle Details -->
+            <div>
+                <!-- Price Card -->
+                <div class="card mb-6">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between gap-6 flex-wrap">
+                            <div>
+                                <div class="text-slate-500 text-sm font-semibold uppercase tracking-wider">Prix par jour</div>
+                                <div class="mt-1">
+                                    <span class="text-4xl font-bold gradient-text">{{ voiture.prixParJour }}</span>
+                                    <span class="text-slate-500 text-base ml-2">MAD</span>
+                                </div>
+                            </div>
+                            <span class="badge badge-info">
+                                <i class="bi bi-shield-check mr-2"></i>Assurance incluse
                             </span>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Specs Grid -->
-            <div class="card mb-4">
-                <div class="card-body p-4">
-                    <h5 class="fw-bold mb-4">
-                        <i class="bi bi-gear-wide-connected me-2 gradient-text"></i>Caractéristiques
-                    </h5>
-                    <div class="row g-3">
-                        <div class="col-6">
-                            <div class="d-flex align-items-center gap-3 p-3" style="background: var(--bg-secondary); border-radius: var(--radius-md);">
-                                <div style="width: 45px; height: 45px; background: var(--primary-gradient); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center;">
+
+                <!-- Specs Grid -->
+                <div class="card mb-6">
+                    <div class="p-6">
+                        <h2 class="text-xl font-bold text-slate-900 mb-4">
+                            <i class="bi bi-gear-wide-connected mr-2 gradient-text"></i>Caractéristiques
+                        </h2>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <div class="w-11 h-11 rounded-lg bg-gradient-to-br from-primary-600 to-primary-700 flex items-center justify-center">
                                     <i class="bi bi-calendar3 text-white"></i>
                                 </div>
                                 <div>
-                                    <span class="text-muted small">Année</span>
-                                    <div class="fw-bold">{{ voiture.annee }}</div>
+                                    <div class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Année</div>
+                                    <div class="font-bold text-slate-900">{{ voiture.annee }}</div>
                                 </div>
                             </div>
-                        </div>
-                        {% if voiture.nombrePlaces %}
-                        <div class="col-6">
-                            <div class="d-flex align-items-center gap-3 p-3" style="background: var(--bg-secondary); border-radius: var(--radius-md);">
-                                <div style="width: 45px; height: 45px; background: var(--success-gradient); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center;">
+
+                            {% if voiture.nombrePlaces %}
+                            <div class="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <div class="w-11 h-11 rounded-lg bg-gradient-to-br from-green-600 to-green-700 flex items-center justify-center">
                                     <i class="bi bi-people-fill text-white"></i>
                                 </div>
                                 <div>
-                                    <span class="text-muted small">Places</span>
-                                    <div class="fw-bold">{{ voiture.nombrePlaces }}</div>
+                                    <div class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Places</div>
+                                    <div class="font-bold text-slate-900">{{ voiture.nombrePlaces }}</div>
                                 </div>
                             </div>
-                        </div>
-                        {% endif %}
-                        {% if voiture.typeCarburant %}
-                        <div class="col-6">
-                            <div class="d-flex align-items-center gap-3 p-3" style="background: var(--bg-secondary); border-radius: var(--radius-md);">
-                                <div style="width: 45px; height: 45px; background: var(--warning-gradient); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center;">
-                                    <i class="bi bi-fuel-pump-fill" style="color: #1a1a2e;"></i>
+                            {% endif %}
+
+                            {% if voiture.typeCarburant %}
+                            <div class="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <div class="w-11 h-11 rounded-lg bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center">
+                                    <i class="bi bi-fuel-pump-fill text-slate-900"></i>
                                 </div>
                                 <div>
-                                    <span class="text-muted small">Carburant</span>
-                                    <div class="fw-bold">{{ voiture.typeCarburant }}</div>
+                                    <div class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Carburant</div>
+                                    <div class="font-bold text-slate-900">{{ voiture.typeCarburant }}</div>
                                 </div>
                             </div>
-                        </div>
-                        {% endif %}
-                        <div class="col-6">
-                            <div class="d-flex align-items-center gap-3 p-3" style="background: var(--bg-secondary); border-radius: var(--radius-md);">
-                                <div style="width: 45px; height: 45px; background: var(--secondary-gradient); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center;">
+                            {% endif %}
+
+                            <div class="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <div class="w-11 h-11 rounded-lg bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center">
                                     <i class="bi bi-speedometer text-white"></i>
                                 </div>
                                 <div>
-                                    <span class="text-muted small">Transmission</span>
-                                    <div class="fw-bold">Automatique</div>
+                                    <div class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Transmission</div>
+                                    <div class="font-bold text-slate-900">Automatique</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Description -->
-            {% if voiture.description %}
-            <div class="card mb-4">
-                <div class="card-body p-4">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-file-text me-2 gradient-text"></i>Description
-                    </h5>
-                    <p class="text-muted mb-0" style="line-height: 1.8;">{{ voiture.description }}</p>
+
+                <!-- Description -->
+                {% if voiture.description %}
+                <div class="card mb-6">
+                    <div class="p-6">
+                        <h2 class="text-xl font-bold text-slate-900 mb-3">
+                            <i class="bi bi-file-text mr-2 gradient-text"></i>Description
+                        </h2>
+                        <p class="text-slate-600 leading-relaxed">{{ voiture.description }}</p>
+                    </div>
                 </div>
-            </div>
-            {% endif %}
-            
-            <!-- Action Buttons -->
-            <div class="d-grid gap-3">
-                {% if voiture.statut == 'disponible' and app.user and 'ROLE_CLIENT' in app.user.roles %}
-                    <a href="{{ path('app_reservation_new_voiture', {'voitureId': voiture.id}) }}" class="btn btn-primary btn-lg">
-                        <i class="bi bi-calendar-check me-2"></i>Réserver maintenant
-                    </a>
-                {% elseif voiture.statut == 'disponible' and not app.user %}
-                    <a href="{{ path('app_login') }}" class="btn btn-primary btn-lg">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>Connectez-vous pour réserver
-                    </a>
-                {% elseif voiture.statut != 'disponible' %}
-                    <button class="btn btn-secondary btn-lg" disabled>
-                        <i class="bi bi-x-circle me-2"></i>Véhicule non disponible
-                    </button>
                 {% endif %}
-                
-                <a href="{{ path('app_voiture_index') }}" class="btn btn-outline-primary">
-                    <i class="bi bi-arrow-left me-2"></i>Retour à la liste
-                </a>
+
+                <!-- Action Buttons -->
+                <div class="space-y-3">
+                    {% if voiture.statut == 'disponible' and app.user and 'ROLE_CLIENT' in app.user.roles %}
+                        <a href="{{ path('app_reservation_new_voiture', {'voitureId': voiture.id}) }}" class="btn-primary w-full text-center">
+                            <i class="bi bi-calendar-check mr-2"></i>Réserver maintenant
+                        </a>
+                    {% elseif voiture.statut == 'disponible' and not app.user %}
+                        <a href="{{ path('app_login') }}" class="btn-primary w-full text-center">
+                            <i class="bi bi-box-arrow-in-right mr-2"></i>Connectez-vous pour réserver
+                        </a>
+                    {% elseif voiture.statut != 'disponible' %}
+                        <button class="btn-secondary w-full" disabled>
+                            <i class="bi bi-x-circle mr-2"></i>Véhicule non disponible
+                        </button>
+                    {% endif %}
+
+                    <a href="{{ path('app_voiture_index') }}" class="btn-outline-primary w-full text-center">
+                        <i class="bi bi-arrow-left mr-2"></i>Retour à la liste
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Related Vehicles Section (Optional) -->
-<section style="background: var(--bg-secondary); padding: 4rem 0;">
-    <div class="container">
-        <div class="text-center mb-4">
-            <h3 class="fw-bold">Autres véhicules disponibles</h3>
-            <p class="text-muted">Découvrez d'autres options dans notre flotte</p>
+<section class="py-14 bg-slate-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-8">
+            <h3 class="text-3xl font-bold text-slate-900">Autres véhicules disponibles</h3>
+            <p class="text-slate-600 mt-2">Découvrez d'autres options dans notre flotte</p>
         </div>
         <div class="text-center">
-            <a href="{{ path('app_voiture_index') }}" class="btn btn-primary">
-                <i class="bi bi-grid-3x3-gap me-2"></i>Voir tous les véhicules
+            <a href="{{ path('app_voiture_index') }}" class="btn-primary inline-flex items-center space-x-2">
+                <i class="bi bi-grid-3x3-gap"></i>
+                <span>Voir tous les véhicules</span>
             </a>
         </div>
     </div>

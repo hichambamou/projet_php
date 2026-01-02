@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/photo_voiture')]
 final class PhotoVoitureController extends AbstractController
@@ -21,6 +21,7 @@ final class PhotoVoitureController extends AbstractController
     }
 
     #[Route('/new', name: 'app_photo_voiture_new', methods: ['GET','POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $em): Response
     {
         $photo = new PhotoVoiture();
@@ -43,6 +44,7 @@ final class PhotoVoitureController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_photo_voiture_edit', methods: ['GET','POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(Request $request, PhotoVoiture $photo, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(PhotoVoitureType::class, $photo);
@@ -57,6 +59,7 @@ final class PhotoVoitureController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_photo_voiture_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, PhotoVoiture $photo, EntityManagerInterface $em): Response
     {
         if ($this->isCsrfTokenValid('delete'.$photo->getId(), $request->request->get('_token'))) {

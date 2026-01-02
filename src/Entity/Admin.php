@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: AdminRepository::class)]
+#[ORM\Table(name: 'admin')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 class Admin implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -30,6 +31,12 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    public function __construct()
+    {
+        // Ensure a sensible default; repository/controllers can still adjust roles explicitly
+        $this->roles = ['ROLE_ADMIN'];
+    }
 
     public function getId(): ?int
     {
@@ -64,7 +71,8 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
+        // Guarantee base roles
+        $roles[] = 'ROLE_ADMIN';
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);

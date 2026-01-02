@@ -27,7 +27,7 @@ class Voiture
     #[ORM\Column(name: 'prix_par_jour', type: 'float')]
     private float $prixParJour;
 
-    #[ORM\Column(name: 'statut', type: 'string', length: 20, columnDefinition: "ENUM('disponible', 'louee', 'maintenance') DEFAULT 'disponible'")]
+    #[ORM\Column(name: 'statut', type: 'string', length: 20)]
     private string $statut = 'disponible';
 
     #[ORM\Column(name: 'nombre_places', type: 'integer', nullable: true)]

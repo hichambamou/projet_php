@@ -68,7 +68,7 @@
                         <i class="bi bi-person-check-fill text-white" style="font-size: 1.5rem;"></i>
                     </div>
                     <div>
-                        <h3 class="fw-bold mb-0">{{ users|filter(u => u is not instanceof('App\\Entity\\Administrateur'))|length }}</h3>
+                        <h3 class="fw-bold mb-0">{{ users|filter(u => 'ROLE_ADMIN' not in u.roles)|length }}</h3>
                         <span class="text-muted">Clients</span>
                     </div>
                 </div>
@@ -81,7 +81,7 @@
                         <i class="bi bi-shield-check" style="font-size: 1.5rem; color: #1a1a2e;"></i>
                     </div>
                     <div>
-                        <h3 class="fw-bold mb-0">{{ users|filter(u => u is instanceof('App\\Entity\\Administrateur'))|length }}</h3>
+                        <h3 class="fw-bold mb-0">{{ users|filter(u => 'ROLE_ADMIN' in u.roles)|length }}</h3>
                         <span class="text-muted">Administrateurs</span>
                     </div>
                 </div>
@@ -118,12 +118,12 @@
                             </td>
                             <td>
                                 <div class="d-flex align-items-center gap-3">
-                                    <div style="width: 40px; height: 40px; background: {% if user is instanceof('App\\Entity\\Administrateur') %}var(--warning-gradient){% else %}var(--primary-gradient){% endif %}; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                        <i class="bi bi-person{% if user is instanceof('App\\Entity\\Administrateur') %}-gear{% endif %}" style="color: {% if user is instanceof('App\\Entity\\Administrateur') %}#1a1a2e{% else %}white{% endif %};"></i>
+                                    <div style="width: 40px; height: 40px; background: {% if 'ROLE_ADMIN' in user.roles %}var(--warning-gradient){% else %}var(--primary-gradient){% endif %}; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                        <i class="bi bi-person{% if 'ROLE_ADMIN' in user.roles %}-gear{% endif %}" style="color: {% if 'ROLE_ADMIN' in user.roles %}#1a1a2e{% else %}white{% endif %};"></i>
                                     </div>
                                     <div>
                                         <div class="fw-bold">{{ user.nom }}</div>
-                                        {% if user.telephone %}
+                                        {% if 'ROLE_ADMIN' not in user.roles and user.telephone %}
                                         <small class="text-muted">{{ user.telephone }}</small>
                                         {% endif %}
                                     </div>
@@ -133,7 +133,7 @@
                                 <a href="mailto:{{ user.email }}" class="text-decoration-none">{{ user.email }}</a>
                             </td>
                             <td>
-                                {% if user is instanceof('App\\Entity\\Administrateur') %}
+                                {% if 'ROLE_ADMIN' in user.roles %}
                                     <span class="badge" style="background: var(--warning-gradient); color: #1a1a2e;">
                                         <i class="bi bi-shield-check me-1"></i>Admin
                                     </span>

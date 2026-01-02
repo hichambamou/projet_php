@@ -45,22 +45,7 @@ final class AdminController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $hashedPassword = $passwordHasher->hashPassword($client, $client->getMotDePasse());
             $client->setMotDePasse($hashedPassword);
-            
-            // Ensure utilisateur is created
-            $utilisateur = $client->getUtilisateur();
-            if ($utilisateur === null) {
-                $utilisateur = new Utilisateur();
-                $utilisateur->setNom($client->getNom());
-                $utilisateur->setEmail($client->getEmail());
-                $utilisateur->setMotDePasse($hashedPassword);
-                $utilisateur->setRole('CLIENT');
-                $client->setUtilisateur($utilisateur);
-            }
-            
-            $entityManager->persist($utilisateur);
-            $entityManager->flush(); // Flush to get the ID
-            
-            $client->setId($utilisateur->getId());
+
             $entityManager->persist($client);
             $entityManager->flush();
 
@@ -83,22 +68,7 @@ final class AdminController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $hashedPassword = $passwordHasher->hashPassword($admin, $admin->getMotDePasse());
             $admin->setMotDePasse($hashedPassword);
-            
-            // Ensure utilisateur is created
-            $utilisateur = $admin->getUtilisateur();
-            if ($utilisateur === null) {
-                $utilisateur = new Utilisateur();
-                $utilisateur->setNom($admin->getNom());
-                $utilisateur->setEmail($admin->getEmail());
-                $utilisateur->setMotDePasse($hashedPassword);
-                $utilisateur->setRole('ADMIN');
-                $admin->setUtilisateur($utilisateur);
-            }
-            
-            $entityManager->persist($utilisateur);
-            $entityManager->flush(); // Flush to get the ID
-            
-            $admin->setId($utilisateur->getId());
+
             $entityManager->persist($admin);
             $entityManager->flush();
 
@@ -114,27 +84,11 @@ final class AdminController extends AbstractController
     #[Route('/users/{id}/edit', name: 'app_admin_user_edit', methods: ['GET', 'POST'])]
     public function editUser(Request $request, Utilisateur $user, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
-        // Find the corresponding Client or Administrateur based on role
-        $entity = null;
-        $form = null;
-        
-        if ($user->getRole() === 'CLIENT') {
-            $entity = $entityManager->getRepository(Client::class)->find($user->getId());
-            if ($entity === null) {
-                // Create client if it doesn't exist
-                $entity = new Client();
-                $entity->setId($user->getId());
-                $entity->setUtilisateur($user);
-            }
+        // With JOINED inheritance, the $user is already the concrete entity (Client or Administrateur)
+        $entity = $user;
+        if ($user instanceof Client) {
             $form = $this->createForm(ClientType::class, $entity);
-        } elseif ($user->getRole() === 'ADMIN') {
-            $entity = $entityManager->getRepository(Administrateur::class)->find($user->getId());
-            if ($entity === null) {
-                // Create admin if it doesn't exist
-                $entity = new Administrateur();
-                $entity->setId($user->getId());
-                $entity->setUtilisateur($user);
-            }
+        } elseif ($user instanceof Administrateur) {
             $form = $this->createForm(AdministrateurType::class, $entity);
         } else {
             throw $this->createNotFoundException('User type not supported');
@@ -143,14 +97,9 @@ final class AdminController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Update utilisateur fields
-            $user->setNom($entity->getNom());
-            $user->setEmail($entity->getEmail());
-            
             // If password is being changed, hash it
             if ($form->has('motDePasse') && $form->get('motDePasse')->getData()) {
                 $hashedPassword = $passwordHasher->hashPassword($entity, $form->get('motDePasse')->getData());
-                $user->setMotDePasse($hashedPassword);
                 $entity->setMotDePasse($hashedPassword);
             }
 

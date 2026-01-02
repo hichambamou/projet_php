@@ -19,13 +19,13 @@ final class Version20251228154924 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // Create tables matching the exact database schema with ENUM types
+        // Create tables matching the exact database schema
         $this->addSql("CREATE TABLE utilisateur (
             id INT AUTO_INCREMENT PRIMARY KEY,
             nom VARCHAR(100) NOT NULL,
             email VARCHAR(150) NOT NULL UNIQUE,
             mot_de_passe VARCHAR(255) NOT NULL,
-            role ENUM('CLIENT', 'ADMIN') NOT NULL
+            role VARCHAR(255) NOT NULL
         ) ENGINE = InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
         
         $this->addSql("CREATE TABLE client (
@@ -50,7 +50,7 @@ final class Version20251228154924 extends AbstractMigration
             modele VARCHAR(100) NOT NULL,
             annee INT NOT NULL,
             prix_par_jour FLOAT NOT NULL,
-            statut ENUM('disponible', 'louee', 'maintenance') DEFAULT 'disponible',
+            statut VARCHAR(20) DEFAULT 'disponible',
             nombre_places INT,
             type_carburant VARCHAR(50),
             photo_principale VARCHAR(255),
@@ -73,7 +73,7 @@ final class Version20251228154924 extends AbstractMigration
             date_debut DATE NOT NULL,
             date_fin DATE NOT NULL,
             montant FLOAT NOT NULL,
-            statut ENUM('en_attente', 'confirmee', 'annulee') DEFAULT 'en_attente',
+            statut VARCHAR(20) DEFAULT 'en_attente',
             CONSTRAINT fk_res_client
                 FOREIGN KEY (client_id) REFERENCES client(id)
                 ON DELETE CASCADE,

@@ -3,13 +3,36 @@
 {% block title %}Ajouter une voiture - MarokiCars{% endblock %}
 
 {% block body %}
-<div class="container my-5">
+<section style="background: var(--dark-gradient); padding: 3rem 0 2rem; position: relative; overflow: hidden;">
+    <div style="position: absolute; inset: 0; background: radial-gradient(circle at 30% 50%, rgba(56,239,125,0.15) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(102,126,234,0.15) 0%, transparent 50%);"></div>
+    <div class="container position-relative" style="z-index: 1;">
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb mb-0" style="background: transparent;">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('home') }}" class="text-decoration-none" style="color: rgba(255,255,255,0.7);">
+                        <i class="bi bi-house-door me-1"></i>Accueil
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ path('app_voiture_index') }}" class="text-decoration-none" style="color: rgba(255,255,255,0.7);">Voitures</a>
+                </li>
+                <li class="breadcrumb-item active" style="color: white;">Ajouter</li>
+            </ol>
+        </nav>
+        <h1 class="display-5 fw-bold mb-0" style="color: white;">
+            <i class="bi bi-plus-circle-fill me-2" style="color:#38ef7d;"></i>Ajouter une nouvelle voiture
+        </h1>
+    </div>
+    <div class="container position-relative mt-4" style="z-index: 1;">
+        <a href="{{ path('app_voiture_index') }}" class="btn btn-light">
+            <i class="bi bi-arrow-left me-2"></i>Retour à la liste
+        </a>
+    </div>
+</section>
+
+<section class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-10">
-            <div class="d-flex align-items-center mb-4">
-                <i class="bi bi-plus-circle text-primary me-3" style="font-size: 2.5rem;"></i>
-                <h1 class="mb-0 fw-bold">Ajouter une nouvelle voiture</h1>
-            </div>
             <div class="card shadow-lg border-0">
                 <div class="card-body p-5">
                     {{ include('voiture/_form.html.twig') }}
@@ -17,5 +40,5 @@
             </div>
         </div>
     </div>
-</div>
+</section>
 {% endblock %}
