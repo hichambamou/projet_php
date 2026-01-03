@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Voiture;
+use App\Entity\CategorieVoiture;
+use App\Repository\CategorieVoitureRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +23,16 @@ final class HomeController extends AbstractController
 
         return $this->render('home/index.html.twig', [
             'voitures' => $voitures,
+        ]);
+    }
+
+    #[Route('/categories', name: 'app_categorie_index', methods: ['GET'])]
+    public function categories(CategorieVoitureRepository $categorieRepository): Response
+    {
+        $categories = $categorieRepository->findAll();
+        
+        return $this->render('categorie/index.html.twig', [
+            'categories' => $categories,
         ]);
     }
 }

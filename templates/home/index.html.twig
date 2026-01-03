@@ -65,6 +65,56 @@
     </div>
 </section>
 
+<!-- Categories Section -->
+<section class="py-16 lg:py-24 bg-gradient-to-b from-slate-50 to-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center space-x-2 bg-accent-100 text-accent-700 rounded-full px-4 py-2 mb-4">
+                <i class="bi bi-tags"></i>
+                <span class="text-sm font-semibold">Parcourir par catégorie</span>
+            </div>
+            <h2 class="text-4xl lg:text-5xl font-bold text-slate-900 mb-4">Choisissez selon vos besoins</h2>
+            <p class="text-slate-600 text-lg max-w-2xl mx-auto">
+                Trouvez rapidement le véhicule parfait en sélectionnant la catégorie qui correspond à vos besoins.
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+            <a href="{{ path('app_categorie_index') }}" class="card group hover:shadow-xl transition-all duration-300 text-center p-6">
+                <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <i class="bi bi-people-fill text-blue-600 text-2xl"></i>
+                </div>
+                <h4 class="font-bold text-slate-900 mb-2">Toutes les catégories</h4>
+                <p class="text-slate-600 text-sm">Explorer par type</p>
+            </a>
+            
+            <a href="{{ path('app_voiture_index') }}" class="card group hover:shadow-xl transition-all duration-300 text-center p-6">
+                <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <i class="bi bi-car-front text-green-600 text-2xl"></i>
+                </div>
+                <h4 class="font-bold text-slate-900 mb-2">Toutes les voitures</h4>
+                <p class="text-slate-600 text-sm">Voir tout</p>
+            </a>
+            
+            <a href="{{ path('app_voiture_index') }}?statut=disponible" class="card group hover:shadow-xl transition-all duration-300 text-center p-6">
+                <div class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <i class="bi bi-check-circle text-emerald-600 text-2xl"></i>
+                </div>
+                <h4 class="font-bold text-slate-900 mb-2">Disponibles</h4>
+                <p class="text-slate-600 text-sm">Maintenant</p>
+            </a>
+            
+            <a href="{{ path('app_voiture_index') }}?promo=1" class="card group hover:shadow-xl transition-all duration-300 text-center p-6">
+                <div class="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <i class="bi bi-tag-fill text-red-600 text-2xl"></i>
+                </div>
+                <h4 class="font-bold text-slate-900 mb-2">Promotions</h4>
+                <p class="text-slate-600 text-sm">Meilleurs prix</p>
+            </a>
+        </div>
+    </div>
+</section>
+
 <!-- Featured Vehicles Section -->
 <section class="py-16 lg:py-24 bg-white">
     <div class="container mx-auto px-4">

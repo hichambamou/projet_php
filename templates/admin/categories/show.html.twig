@@ -1,0 +1,134 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de la catégorie{% endblock %}
+
+{% block body %}
+<section class="hero-section">
+    <div class="container mx-auto px-4 py-16">
+        <div class="text-center">
+            <h1 class="display-4 gradient-text mb-4">{{ categorie.nom }}</h1>
+            <p class="lead text-white/90 mb-8">Détails de la catégorie</p>
+            <nav class="breadcrumb justify-content-center">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('admin_index') }}" class="text-white/80 hover:text-white">Admin</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ path('admin_categorie_index') }}" class="text-white/80 hover:text-white">Catégories</a>
+                </li>
+                <li class="breadcrumb-item text-white">{{ categorie.nom }}</li>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<section class="py-8">
+    <div class="container mx-auto px-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3 class="h5 mb-0 fw-bold">Informations de la catégorie</h3>
+                            <div>
+                                <a href="{{ path('admin_categorie_edit', {'id': categorie.id}) }}" class="btn btn-sm btn-outline-primary me-2">
+                                    <i class="bi bi-pencil me-1"></i>Modifier
+                                </a>
+                                {% if categorie.voitures.count == 0 %}
+                                    <form method="post" action="{{ path('admin_categorie_delete', {'id': categorie.id}) }}" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ categorie.id) }}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-trash me-1"></i>Supprimer
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4 class="fs-6 fw-bold text-muted mb-2">Nom</h4>
+                                <p class="fs-5">{{ categorie.nom }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h4 class="fs-6 fw-bold text-muted mb-2">Nombre de voitures</h4>
+                                <p class="fs-5">{{ categorie.voitures.count }} voiture{{ categorie.voitures.count > 1 ? 's' : '' }}</p>
+                            </div>
+                        </div>
+
+                        {% if categorie.description %}
+                            <div class="mt-4">
+                                <h4 class="fs-6 fw-bold text-muted mb-2">Description</h4>
+                                <p class="fs-5">{{ categorie.description|nl2br }}</p>
+                            </div>
+                        {% endif %}
+
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <h4 class="fs-6 fw-bold text-muted mb-2">Date de création</h4>
+                                <p class="fs-5">{{ categorie.createdAt|date('d/m/Y H:i') }}</p>
+                            </div>
+                            {% if categorie.updatedAt %}
+                                <div class="col-md-6">
+                                    <h4 class="fs-6 fw-bold text-muted mb-2">Dernière mise à jour</h4>
+                                    <p class="fs-5">{{ categorie.updatedAt|date('d/m/Y H:i') }}</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                {% if categorie.voitures.count > 0 %}
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h3 class="h5 mb-0 fw-bold">Voitures dans cette catégorie</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Marque</th>
+                                            <th>Modèle</th>
+                                            <th>Année</th>
+                                            <th>Prix/jour</th>
+                                            <th>Statut</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for voiture in categorie.voitures %}
+                                            <tr>
+                                                <td>{{ voiture.marque }}</td>
+                                                <td>{{ voiture.modele }}</td>
+                                                <td>{{ voiture.annee }}</td>
+                                                <td>{{ voiture.prixParJour|number_format(2, ',', ' ') }} MAD</td>
+                                                <td>
+                                                    <span class="badge {% if voiture.statut == 'disponible' %}bg-success{% elseif voiture.statut == 'louee' %}bg-danger{% else %}bg-warning{% endif %}">
+                                                        {{ voiture.statut|capitalize }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <a href="{{ path('voiture_show', {'id': voiture.id}) }}" class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-eye"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="mt-4">
+                    <a href="{{ path('admin_categorie_index') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-2"></i>Retour à la liste
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

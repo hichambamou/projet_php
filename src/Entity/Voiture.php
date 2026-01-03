@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use App\Entity\CategorieVoiture;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'voiture')]
@@ -41,6 +42,10 @@ class Voiture
 
     #[ORM\Column(name: 'description', type: 'text', nullable: true)]
     private ?string $description = null;
+
+    #[ORM\ManyToOne(targetEntity: CategorieVoiture::class, inversedBy: 'voitures')]
+    #[ORM\JoinColumn(name: 'categorie_id', referencedColumnName: 'id', nullable: true)]
+    private ?CategorieVoiture $categorie = null;
 
     #[ORM\OneToMany(mappedBy: 'voiture', targetEntity: Reservation::class)]
     private Collection $reservations;
@@ -155,6 +160,17 @@ class Voiture
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function getCategorie(): ?CategorieVoiture
+    {
+        return $this->categorie;
+    }
+
+    public function setCategorie(?CategorieVoiture $categorie): self
+    {
+        $this->categorie = $categorie;
         return $this;
     }
 

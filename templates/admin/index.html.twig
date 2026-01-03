@@ -22,7 +22,7 @@
 <section class="container py-5">
     <!-- Quick Actions -->
     <div class="row g-4 mb-5">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card h-100" style="border-left: 4px solid #667eea;">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center gap-4 mb-4">
@@ -41,7 +41,7 @@
             </div>
         </div>
         
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card h-100" style="border-left: 4px solid #38ef7d;">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center gap-4 mb-4">
@@ -60,7 +60,7 @@
             </div>
         </div>
         
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card h-100" style="border-left: 4px solid #f093fb;">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center gap-4 mb-4">
@@ -78,6 +78,25 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-3">
+            <div class="card h-100" style="border-left: 4px solid #ffa726;">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center gap-4 mb-4">
+                        <div style="width: 60px; height: 60px; background: var(--warning-gradient); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-tags-fill text-white" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Catégories</h5>
+                            <p class="text-muted mb-0 small">Organiser les voitures par catégories</p>
+                        </div>
+                    </div>
+                    <a href="{{ path('admin_categorie_index') }}" class="btn" style="background: var(--warning-gradient); color: white;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                        <i class="bi bi-arrow-right me-2"></i>Gérer les catégories
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
     
     <!-- Quick Links -->
@@ -87,19 +106,24 @@
                 <i class="bi bi-lightning-charge gradient-text me-2"></i>Actions rapides
             </h5>
             <div class="row g-3">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <a href="{{ path('app_voiture_new') }}" class="btn btn-outline-primary w-100">
                         <i class="bi bi-plus-circle me-2"></i>Ajouter une voiture
                     </a>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <a href="{{ path('app_admin_user_new_client') }}" class="btn btn-outline-success w-100">
                         <i class="bi bi-person-plus me-2"></i>Ajouter un client
                     </a>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <a href="{{ path('app_admin_user_new_admin') }}" class="btn btn-outline-secondary w-100">
                         <i class="bi bi-person-plus-fill me-2"></i>Ajouter un admin
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="{{ path('admin_categorie_new') }}" class="btn" style="border: 2px solid #ffa726; color: #ffa726;" onmouseover="this.style.background='#ffa726'; this.style.color='white';" onmouseout="this.style.background='transparent'; this.style.color='#ffa726';">
+                        <i class="bi bi-tags me-2"></i>Ajouter une catégorie
                     </a>
                 </div>
             </div>

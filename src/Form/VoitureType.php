@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Voiture;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -21,6 +22,14 @@ class VoitureType extends AbstractType
             ->add('marque', TextType::class, [
                 'label' => 'Marque',
                 'attr' => ['class' => 'form-control']
+            ])
+            ->add('categorie', EntityType::class, [
+                'label' => 'Catégorie',
+                'class' => 'App\Entity\CategorieVoiture',
+                'choice_label' => 'nom',
+                'required' => false,
+                'placeholder' => 'Sélectionner une catégorie',
+                'attr' => ['class' => 'form-select']
             ])
             ->add('modele', TextType::class, [
                 'label' => 'Modèle',

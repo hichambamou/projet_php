@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Voiture;
+use App\Entity\CategorieVoiture;
 use App\Form\VoitureType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,14 +16,23 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class VoitureController extends AbstractController
 {
     #[Route(name: 'app_voiture_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(EntityManagerInterface $entityManager, Request $request): Response
     {
-        $voitures = $entityManager
-            ->getRepository(Voiture::class)
-            ->findAll();
+        $categorieId = $request->query->get('categorie');
+        
+        $qb = $entityManager->getRepository(Voiture::class)->createQueryBuilder('v');
+        
+        if ($categorieId) {
+            $qb->leftJoin('v.categorie', 'c')
+               ->where('c.id = :categorieId')
+               ->setParameter('categorieId', $categorieId);
+        }
+        
+        $voitures = $qb->getQuery()->getResult();
 
         return $this->render('voiture/index.html.twig', [
             'voitures' => $voitures,
+            'categorieId' => $categorieId,
         ]);
     }
 
