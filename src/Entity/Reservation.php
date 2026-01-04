@@ -13,14 +13,14 @@ class Reservation
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(name: 'date_debut', type: 'date')]
-    private \DateTimeInterface $dateDebut;
+    #[ORM\Column(name: 'date_debut', type: 'date', nullable: true)]
+    private ?\DateTimeInterface $dateDebut = null;
 
-    #[ORM\Column(name: 'date_fin', type: 'date')]
-    private \DateTimeInterface $dateFin;
+    #[ORM\Column(name: 'date_fin', type: 'date', nullable: true)]
+    private ?\DateTimeInterface $dateFin = null;
 
-    #[ORM\Column(name: 'montant', type: 'float')]
-    private float $montant;
+    #[ORM\Column(name: 'montant', type: 'float', nullable: true)]
+    private ?float $montant = null;
 
     #[ORM\Column(name: 'statut', type: 'string', length: 20)]
     private string $statut = 'en_attente';
@@ -42,34 +42,34 @@ class Reservation
         return $this->id;
     }
 
-    public function getDateDebut(): \DateTimeInterface
+    public function getDateDebut(): ?\DateTimeInterface
     {
         return $this->dateDebut;
     }
 
-    public function setDateDebut(\DateTimeInterface $dateDebut): self
+    public function setDateDebut(?\DateTimeInterface $dateDebut): self
     {
         $this->dateDebut = $dateDebut;
         return $this;
     }
 
-    public function getDateFin(): \DateTimeInterface
+    public function getDateFin(): ?\DateTimeInterface
     {
         return $this->dateFin;
     }
 
-    public function setDateFin(\DateTimeInterface $dateFin): self
+    public function setDateFin(?\DateTimeInterface $dateFin): self
     {
         $this->dateFin = $dateFin;
         return $this;
     }
 
-    public function getMontant(): float
+    public function getMontant(): ?float
     {
         return $this->montant;
     }
 
-    public function setMontant(float $montant): self
+    public function setMontant(?float $montant): self
     {
         $this->montant = $montant;
         return $this;

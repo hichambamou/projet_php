@@ -55,9 +55,9 @@
             
             <div class="hidden lg:block relative">
                 <div class="absolute inset-0 bg-gradient-to-br from-primary-500/30 to-accent-500/30 rounded-3xl blur-3xl transform rotate-6"></div>
-                <div class="relative bg-white/10 backdrop-blur-lg rounded-3xl p-12 border border-white/20">
+                <div class="relative bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10">
                     <div class="text-center">
-                        <i class="bi bi-car-front-fill text-white/20" style="font-size: 12rem;"></i>
+                        <img src="{{ asset('images/logo_v2.jpg') }}" alt="MarokiCars Logo" class="w-full max-w-md mx-auto transform hover:scale-105 transition-transform duration-500">
                     </div>
                 </div>
             </div>
@@ -80,6 +80,14 @@
         </div>
         
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+            <a href="{{ path('app_video_index') }}" class="card group hover:shadow-xl transition-all duration-300 text-center p-6">
+                <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <i class="bi bi-play-circle text-purple-600 text-2xl"></i>
+                </div>
+                <h4 class="font-bold text-slate-900 mb-2">Vidéo</h4>
+                <p class="text-slate-600 text-sm">Découvrez</p>
+            </a>
+            
             <a href="{{ path('app_categorie_index') }}" class="card group hover:shadow-xl transition-all duration-300 text-center p-6">
                 <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
                     <i class="bi bi-people-fill text-blue-600 text-2xl"></i>

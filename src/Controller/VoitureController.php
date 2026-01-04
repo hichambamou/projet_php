@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Voiture;
 use App\Entity\CategorieVoiture;
 use App\Form\VoitureType;
+use App\Repository\VoitureRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,19 +17,15 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class VoitureController extends AbstractController
 {
     #[Route(name: 'app_voiture_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager, Request $request): Response
+    public function index(VoitureRepository $voitureRepository, Request $request): Response
     {
         $categorieId = $request->query->get('categorie');
-        
-        $qb = $entityManager->getRepository(Voiture::class)->createQueryBuilder('v');
-        
+
         if ($categorieId) {
-            $qb->leftJoin('v.categorie', 'c')
-               ->where('c.id = :categorieId')
-               ->setParameter('categorieId', $categorieId);
+            $voitures = $voitureRepository->findByCategorie((int) $categorieId);
+        } else {
+            $voitures = $voitureRepository->findAll();
         }
-        
-        $voitures = $qb->getQuery()->getResult();
 
         return $this->render('voiture/index.html.twig', [
             'voitures' => $voitures,
@@ -88,7 +85,7 @@ final class VoitureController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Voiture $voiture, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$voiture->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $voiture->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($voiture);
             $entityManager->flush();
         }

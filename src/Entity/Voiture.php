@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Entity\CategorieVoiture;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'voiture')]
@@ -17,15 +18,24 @@ class Voiture
     private ?int $id = null;
 
     #[ORM\Column(name: 'marque', type: 'string', length: 100)]
+    #[Assert\NotBlank(message: 'La marque est obligatoire')]
+    #[Assert\Length(min: 2, max: 100, minMessage: 'La marque doit faire au moins {{ limit }} caractères', maxMessage: 'La marque ne peut pas dépasser {{ limit }} caractères')]
     private string $marque;
 
     #[ORM\Column(name: 'modele', type: 'string', length: 100)]
+    #[Assert\NotBlank(message: 'Le modèle est obligatoire')]
+    #[Assert\Length(min: 2, max: 100, minMessage: 'Le modèle doit faire au moins {{ limit }} caractères', maxMessage: 'Le modèle ne peut pas dépasser {{ limit }} caractères')]
     private string $modele;
 
     #[ORM\Column(name: 'annee', type: 'integer')]
+    #[Assert\NotBlank(message: 'L\'année est obligatoire')]
+    #[Assert\Range(min: 1900, max: 2100, notInRangeMessage: 'L\'année doit être entre {{ min }} et {{ max }}')]
     private int $annee;
 
     #[ORM\Column(name: 'prix_par_jour', type: 'float')]
+    #[Assert\NotBlank(message: 'Le prix par jour est obligatoire')]
+    #[Assert\Positive(message: 'Le prix par jour doit être positif')]
+    #[Assert\LessThan(value: 10000, message: 'Le prix par jour ne peut pas dépasser {{ value }} DH')]
     private float $prixParJour;
 
     #[ORM\Column(name: 'statut', type: 'string', length: 20)]

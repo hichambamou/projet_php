@@ -1,0 +1,352 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Galerie - MarokiCars | Location de voitures au Maroc{% endblock %}
+
+{% block body %}
+<!-- Hero Section -->
+<section class="hero-section py-20 lg:py-32 relative">
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="text-center">
+            <div class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-6">
+                <i class="bi bi-images text-accent-400"></i>
+                <span class="text-white text-sm font-medium">Découvrez notre flotte</span>
+            </div>
+            
+            <h1 class="text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+                Explorez notre<span class="gradient-text-accent"> collection</span><br>
+                exclusive
+            </h1>
+            
+            <p class="text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
+                Une sélection premium de véhicules pour une expérience de conduite exceptionnelle au Maroc
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Professional Gallery Section -->
+<section class="py-16 lg:py-24 bg-gradient-to-b from-slate-50 to-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl lg:text-5xl font-bold text-slate-900 mb-4">Notre Galerie Premium</h2>
+            <p class="text-slate-600 text-lg max-w-2xl mx-auto">
+                Découvrez notre sélection de véhicules premium, alliant confort, performance et élégance
+            </p>
+        </div>
+        
+        <!-- Main Gallery Container -->
+        <div class="max-w-7xl mx-auto">
+            <div class="relative">
+                <!-- Gallery Grid with Professional Animation -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                    <!-- Main Feature Car -->
+                    <div class="group relative overflow-hidden rounded-2xl shadow-2xl transform transition-all duration-700 hover:scale-105">
+                        <div class="aspect-[4/3] relative overflow-hidden">
+                            <img 
+                                src="https://images.unsplash.com/photo-1550355291-bbee04a92027?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80"
+                                alt="Mercedes-Benz Classe S"
+                                class="w-full h-full object-cover transform transition-all duration-1000 group-hover:scale-110"
+                                loading="lazy"
+                            >
+                            
+                            <!-- Overlay with Animation -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                <div class="absolute bottom-0 left-0 right-0 p-8 transform translate-y-full group-hover:translate-y-0 transition-transform duration-700">
+                                    <div class="text-white">
+                                        <div class="flex items-center space-x-3 mb-3">
+                                            <div class="w-12 h-12 bg-accent-500 rounded-full flex items-center justify-center">
+                                                <i class="bi bi-star-fill text-white"></i>
+                                            </div>
+                                            <span class="bg-accent-500 text-white px-3 py-1 rounded-full text-sm font-semibold">Premium</span>
+                                        </div>
+                                        <h3 class="text-3xl font-bold mb-2">Mercedes-Benz Classe S</h3>
+                                        <p class="text-white/90 mb-4">Le summum du luxe et de la technologie</p>
+                                        <div class="flex items-center space-x-4 text-sm">
+                                            <span><i class="bi bi-people-fill mr-1"></i> 5 places</span>
+                                            <span><i class="bi bi-lightning-fill mr-1"></i> Hybride</span>
+                                            <span><i class="bi bi-gear-fill mr-1"></i> Automatique</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Floating Badge -->
+                            <div class="absolute top-6 right-6 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg transform rotate-0 group-hover:rotate-12 transition-transform duration-500">
+                                <span class="text-slate-800 font-semibold">À partir de 1 500 DH/jour</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Secondary Cars -->
+                    <div class="space-y-8">
+                        <!-- BMW Série 3 -->
+                        <div class="group relative overflow-hidden rounded-2xl shadow-xl transform transition-all duration-700 hover:scale-105 hover:shadow-2xl">
+                            <div class="aspect-[16/9] relative overflow-hidden">
+                                <img 
+                                    src="https://images.unsplash.com/photo-1617654112369-53589e8c7194?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80"
+                                    alt="BMW Série 3"
+                                    class="w-full h-full object-cover transform transition-all duration-1000 group-hover:scale-110"
+                                    loading="lazy"
+                                >
+                                
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                    <div class="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-700">
+                                        <div class="text-white">
+                                            <h3 class="text-2xl font-bold mb-1">BMW Série 3</h3>
+                                            <p class="text-white/90 text-sm mb-2">Sportivité et élégance allemande</p>
+                                            <div class="flex items-center space-x-3 text-xs">
+                                                <span><i class="bi bi-people-fill mr-1"></i> 5 places</span>
+                                                <span><i class="bi bi-lightning-fill mr-1"></i> Essence</span>
+                                                <span class="text-accent-400 font-semibold">1 200 DH/jour</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="absolute top-4 right-4 bg-primary-500 text-white rounded-full px-3 py-1 text-xs font-semibold">
+                                    Sport
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Audi Q7 -->
+                        <div class="group relative overflow-hidden rounded-2xl shadow-xl transform transition-all duration-700 hover:scale-105 hover:shadow-2xl">
+                            <div class="aspect-[16/9] relative overflow-hidden">
+                                <img 
+                                    src="https://images.unsplash.com/photo-1542362567-b07e54358753?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80"
+                                    alt="Audi Q7"
+                                    class="w-full h-full object-cover transform transition-all duration-1000 group-hover:scale-110"
+                                    loading="lazy"
+                                >
+                                
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                    <div class="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-700">
+                                        <div class="text-white">
+                                            <h3 class="text-2xl font-bold mb-1">Audi Q7</h3>
+                                            <p class="text-white/90 text-sm mb-2">SUV familial luxueux et spacieux</p>
+                                            <div class="flex items-center space-x-3 text-xs">
+                                                <span><i class="bi bi-people-fill mr-1"></i> 7 places</span>
+                                                <span><i class="bi bi-lightning-fill mr-1"></i> Diesel</span>
+                                                <span class="text-accent-400 font-semibold">1 000 DH/jour</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="absolute top-4 right-4 bg-blue-500 text-white rounded-full px-3 py-1 text-xs font-semibold">
+                                    SUV
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Third Row - Range Rover -->
+                <div class="group relative overflow-hidden rounded-2xl shadow-2xl transform transition-all duration-700 hover:scale-105">
+                    <div class="aspect-[21/9] relative overflow-hidden">
+                        <img 
+                            src="https://images.unsplash.com/photo-1549399388-5c5ccae931a3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80"
+                            alt="Range Rover Evoque"
+                            class="w-full h-full object-cover transform transition-all duration-1000 group-hover:scale-110"
+                            loading="lazy"
+                        >
+                        
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <div class="absolute bottom-0 left-0 right-0 p-8 transform translate-y-full group-hover:translate-y-0 transition-transform duration-700">
+                                <div class="text-white max-w-2xl">
+                                    <div class="flex items-center space-x-3 mb-3">
+                                        <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center">
+                                            <i class="bi bi-truck text-white"></i>
+                                        </div>
+                                        <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-semibold">4x4</span>
+                                    </div>
+                                    <h3 class="text-3xl font-bold mb-2">Range Rover Evoque</h3>
+                                    <p class="text-white/90 mb-4">Le SUV tout-terrain alliant luxe et performances hors route</p>
+                                    <div class="flex items-center space-x-6 text-sm">
+                                        <span><i class="bi bi-people-fill mr-1"></i> 5 places</span>
+                                        <span><i class="bi bi-lightning-fill mr-1"></i> Hybride</span>
+                                        <span><i class="bi bi-gear-fill mr-1"></i> Automatique</span>
+                                        <span><i class="bi bi-geo-alt-fill mr-1"></i> 4x4</span>
+                                        <span class="text-accent-400 font-semibold text-lg">1 300 DH/jour</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="absolute top-6 right-6 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg transform rotate-0 group-hover:rotate-12 transition-transform duration-500">
+                            <span class="text-slate-800 font-semibold">Tout-terrain Premium</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Gallery Controls -->
+            <div class="flex justify-center items-center space-x-4 mt-12">
+                <button onclick="previousImage()" class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center hover:bg-slate-200 transition-colors">
+                    <i class="bi bi-chevron-left text-slate-600"></i>
+                </button>
+                
+                <div class="flex space-x-2">
+                    <span class="w-2 h-2 bg-accent-500 rounded-full"></span>
+                    <span class="w-2 h-2 bg-slate-300 rounded-full"></span>
+                    <span class="w-2 h-2 bg-slate-300 rounded-full"></span>
+                    <span class="w-2 h-2 bg-slate-300 rounded-full"></span>
+                </div>
+                
+                <button onclick="nextImage()" class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center hover:bg-slate-200 transition-colors">
+                    <i class="bi bi-chevron-right text-slate-600"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Description Section -->
+        <div class="mt-16 text-center">
+            <p class="text-slate-600 text-lg max-w-3xl mx-auto mb-8">
+                Notre flotte premium comprend des véhicules sélectionnés pour leur excellence, 
+                leur confort et leurs performances. Chaque voiture est entretenue méticuleusement 
+                pour garantir une expérience de location exceptionnelle sur les routes du Maroc.
+            </p>
+            
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="{{ path('app_voiture_index') }}" class="btn-primary">
+                    <i class="bi bi-car-front me-2"></i>
+                    Explorer toute la flotte
+                </a>
+                <a href="{{ path('app_categorie_index') }}" class="btn-outline-primary">
+                    <i class="bi bi-tags me-2"></i>
+                    Par catégories
+                </a>
+                <button onclick="openBookingModal()" class="btn-accent">
+                    <i class="bi bi-calendar-check me-2"></i>
+                    Réserver maintenant
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Grid -->
+<section class="py-16 lg:py-24 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center group">
+                <div class="w-20 h-20 bg-primary-100 rounded-2xl flex items-center justify-center mx-auto mb-6 transform transition-transform duration-300 group-hover:scale-110">
+                    <i class="bi bi-shield-check text-primary-600 text-3xl"></i>
+                </div>
+                <h4 class="text-xl font-bold text-slate-900 mb-3">Assurance complète</h4>
+                <p class="text-slate-600">Tous nos véhicules sont couverts par une assurance complète pour votre tranquillité d'esprit.</p>
+            </div>
+            
+            <div class="text-center group">
+                <div class="w-20 h-20 bg-accent-100 rounded-2xl flex items-center justify-center mx-auto mb-6 transform transition-transform duration-300 group-hover:scale-110">
+                    <i class="bi bi-headset text-accent-600 text-3xl"></i>
+                </div>
+                <h4 class="text-xl font-bold text-slate-900 mb-3">Support 24/7</h4>
+                <p class="text-slate-600">Notre équipe est disponible 24h/24 et 7j/7 pour vous assister pendant votre location.</p>
+            </div>
+            
+            <div class="text-center group">
+                <div class="w-20 h-20 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-6 transform transition-transform duration-300 group-hover:scale-110">
+                    <i class="bi bi-geo-alt text-emerald-600 text-3xl"></i>
+                </div>
+                <h4 class="text-xl font-bold text-slate-900 mb-3">Livraison partout</h4>
+                <p class="text-slate-600">Livraison et récupération de votre véhicule dans tout le Maroc.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Booking Modal (Hidden by default) -->
+<div id="bookingModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 transform scale-95 opacity-0 transition-all duration-300">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-2xl font-bold text-slate-900">Réservez votre véhicule</h3>
+            <button onclick="closeBookingModal()" class="text-slate-400 hover:text-slate-600">
+                <i class="bi bi-x-lg text-xl"></i>
+            </button>
+        </div>
+        <p class="text-slate-600 mb-6">Choisissez votre véhicule parmi notre sélection premium et réservez en quelques clics.</p>
+        <div class="flex space-x-3">
+            <a href="{{ path('app_voiture_index') }}" class="btn-primary flex-1 text-center">
+                Voir les véhicules
+            </a>
+            <button onclick="closeBookingModal()" class="btn-outline-secondary flex-1">
+                Plus tard
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+let currentImageIndex = 0;
+const images = document.querySelectorAll('.group img');
+
+function previousImage() {
+    // Add animation logic for previous image
+    console.log('Previous image');
+}
+
+function nextImage() {
+    // Add animation logic for next image
+    console.log('Next image');
+}
+
+function openBookingModal() {
+    const modal = document.getElementById('bookingModal');
+    const content = modal.querySelector('div > div');
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        content.classList.remove('scale-95', 'opacity-0');
+        content.classList.add('scale-100', 'opacity-100');
+    }, 10);
+}
+
+function closeBookingModal() {
+    const modal = document.getElementById('bookingModal');
+    const content = modal.querySelector('div > div');
+    content.classList.remove('scale-100', 'opacity-100');
+    content.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 300);
+}
+
+// Add parallax effect on scroll
+window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    const parallax = document.querySelector('.hero-section');
+    if (parallax) {
+        parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
+    }
+});
+
+// Add intersection observer for fade-in animations
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, observerOptions);
+
+// Observe all gallery items
+document.addEventListener('DOMContentLoaded', () => {
+    const galleryItems = document.querySelectorAll('.group');
+    galleryItems.forEach(item => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(20px)';
+        item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(item);
+    });
+});
+</script>
+{% endblock %}

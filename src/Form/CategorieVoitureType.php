@@ -4,10 +4,10 @@ namespace App\Form;
 
 use App\Entity\CategorieVoiture;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CategorieVoitureType extends AbstractType
 {
@@ -17,20 +17,19 @@ class CategorieVoitureType extends AbstractType
             ->add('nom', TextType::class, [
                 'label' => 'Nom de la catégorie',
                 'attr' => [
-                    'class' => 'form-input',
-                    'placeholder' => 'Ex: SUV, Berline, Sport...'
+                    'class' => 'form-control',
+                    'placeholder' => 'Ex: SUV, Berline, Sportive...'
                 ]
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
                 'required' => false,
                 'attr' => [
-                    'class' => 'form-input',
+                    'class' => 'form-control',
                     'rows' => 4,
-                    'placeholder' => 'Description détaillée de la catégorie...'
+                    'placeholder' => 'Description de la catégorie (optionnel)'
                 ]
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

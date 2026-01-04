@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
+use App\Repository\CategorieVoitureRepository;
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: 'App\Repository\CategorieVoitureRepository')]
+#[ORM\Entity(repositoryClass: CategorieVoitureRepository::class)]
 #[ORM\Table(name: 'categorie_voiture')]
 class CategorieVoiture
 {
@@ -15,25 +17,20 @@ class CategorieVoiture
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 100)]
-    private ?string $nom = null;
+    #[ORM\Column(name: 'nom', type: 'string', length: 100)]
+    #[Assert\NotBlank(message: 'Le nom de la catégorie est obligatoire')]
+    #[Assert\Length(min: 2, max: 100, minMessage: 'Le nom doit faire au moins {{ limit }} caractères', maxMessage: 'Le nom ne peut pas dépasser {{ limit }} caractères')]
+    private string $nom;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(name: 'description', type: 'text', nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(type: 'datetime_immutable')]
-    private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $updatedAt = null;
-
-    #[ORM\OneToMany(targetEntity: Voiture::class, mappedBy: 'categorie')]
+    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Voiture::class)]
     private Collection $voitures;
 
     public function __construct()
     {
         $this->voitures = new ArrayCollection();
-        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -41,16 +38,14 @@ class CategorieVoiture
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getNom(): string
     {
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    public function setNom(string $nom): self
     {
         $this->nom = $nom;
-        $this->updatedAt = new \DateTimeImmutable();
-
         return $this;
     }
 
@@ -59,35 +54,9 @@ class CategorieVoiture
         return $this->description;
     }
 
-    public function setDescription(?string $description): static
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
-        $this->updatedAt = new \DateTimeImmutable();
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
-    {
-        $this->updatedAt = $updatedAt;
-
         return $this;
     }
 
@@ -99,7 +68,7 @@ class CategorieVoiture
         return $this->voitures;
     }
 
-    public function addVoiture(Voiture $voiture): static
+    public function addVoiture(Voiture $voiture): self
     {
         if (!$this->voitures->contains($voiture)) {
             $this->voitures->add($voiture);
@@ -109,10 +78,9 @@ class CategorieVoiture
         return $this;
     }
 
-    public function removeVoiture(Voiture $voiture): static
+    public function removeVoiture(Voiture $voiture): self
     {
         if ($this->voitures->removeElement($voiture)) {
-            // set the owning side to null (unless already changed)
             if ($voiture->getCategorie() === $this) {
                 $voiture->setCategorie(null);
             }
@@ -123,6 +91,6 @@ class CategorieVoiture
 
     public function __toString(): string
     {
-        return $this->nom ?? '';
+        return $this->nom;
     }
 }

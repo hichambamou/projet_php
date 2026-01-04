@@ -8,11 +8,6 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<CategorieVoiture>
- *
- * @method CategorieVoiture|null find($id, $lockMode = null, $lockVersion = null)
- * @method CategorieVoiture|null findOneBy(array $criteria, array $orderBy = null)
- * @method CategorieVoiture[]    findAll()
- * @method CategorieVoiture[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class CategorieVoitureRepository extends ServiceEntityRepository
 {
@@ -21,29 +16,29 @@ class CategorieVoitureRepository extends ServiceEntityRepository
         parent::__construct($registry, CategorieVoiture::class);
     }
 
-    public function save(CategorieVoiture $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function remove(CategorieVoiture $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
+    /**
+     * Find all categories with the count of voitures in each
+     */
     public function findWithVoitureCount(): array
     {
         return $this->createQueryBuilder('c')
+            ->select('c', 'COUNT(v.id) as voitureCount')
             ->leftJoin('c.voitures', 'v')
-            ->addSelect('COUNT(v.id) as voitureCount')
+            ->groupBy('c.id')
+            ->orderBy('c.nom', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Find categories that have available voitures
+     */
+    public function findWithAvailableVoitures(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.voitures', 'v')
+            ->where('v.statut = :statut')
+            ->setParameter('statut', 'disponible')
             ->groupBy('c.id')
             ->orderBy('c.nom', 'ASC')
             ->getQuery()

@@ -13,6 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class ReservationType extends AbstractType
 {
@@ -29,12 +31,18 @@ class ReservationType extends AbstractType
             ->add('dateDebut', DateType::class, [
                 'label' => 'Date de début',
                 'widget' => 'single_text',
-                'attr' => ['class' => 'form-control']
+                'attr' => ['class' => 'form-control'],
+                'constraints' => [
+                    new NotBlank(['message' => 'Veuillez entrer la date de début.']),
+                ],
             ])
             ->add('dateFin', DateType::class, [
                 'label' => 'Date de fin',
                 'widget' => 'single_text',
-                'attr' => ['class' => 'form-control']
+                'attr' => ['class' => 'form-control'],
+                'constraints' => [
+                    new NotBlank(['message' => 'Veuillez entrer la date de fin.']),
+                ],
             ])
             ->add('montant', MoneyType::class, [
                 'label' => 'Montant (MAD)',
@@ -62,7 +70,7 @@ class ReservationType extends AbstractType
 
         $builder->add('voiture', EntityType::class, [
             'class' => Voiture::class,
-            'choice_label' => function(Voiture $voiture) {
+            'choice_label' => function (Voiture $voiture) {
                 return $voiture->getMarque() . ' ' . $voiture->getModele() . ' (' . $voiture->getAnnee() . ')';
             },
             'query_builder' => function ($er) {
@@ -70,7 +78,11 @@ class ReservationType extends AbstractType
                     ->where('v.statut = :statut')
                     ->setParameter('statut', 'disponible');
             },
-            'attr' => ['class' => 'form-select']
+            'attr' => ['class' => 'form-select'],
+            'placeholder' => 'Choisir une voiture...',
+            'constraints' => [
+                new NotNull(['message' => 'Veuillez sélectionner une voiture.']),
+            ],
         ]);
     }
 

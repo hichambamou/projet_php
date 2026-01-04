@@ -30,7 +30,7 @@ class HomeController extends AbstractController
     public function categories(CategorieVoitureRepository $categorieRepository): Response
     {
         $categories = $categorieRepository->findAll();
-
+        
         return $this->render('categorie/index.html.twig', [
             'categories' => $categories,
         ]);
@@ -42,7 +42,7 @@ class HomeController extends AbstractController
     public function adminCategories(CategorieVoitureRepository $categorieRepository): Response
     {
         $categories = $categorieRepository->findWithVoitureCount();
-
+        
         return $this->render('admin/categories/index.html.twig', [
             'categories' => $categories,
         ]);
@@ -105,7 +105,7 @@ class HomeController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function adminDeleteCategory(Request $request, CategorieVoiture $categorie, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $categorie->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$categorie->getId(), $request->request->get('_token'))) {
             if ($categorie->getVoitures()->count() > 0) {
                 $this->addFlash('error', 'Impossible de supprimer cette catégorie car elle contient des voitures.');
                 return $this->redirectToRoute('admin_categorie_index');
