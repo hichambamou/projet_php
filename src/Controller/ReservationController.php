@@ -30,17 +30,17 @@ final class ReservationController extends AbstractController
         return $this->render('reservation/index.html.twig', ['reservations' => $items]);
     }
 
-    #[Route('/new', name: 'app_reservation_new', methods: ['GET','POST'])]
-    #[Route('/new/{voitureId}', name: 'app_reservation_new_voiture', methods: ['GET','POST'])]
+    #[Route('/new', name: 'app_reservation_new', methods: ['GET', 'POST'])]
+    #[Route('/new/{voitureId}', name: 'app_reservation_new_voiture', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $em, ?int $voitureId = null): Response
     {
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
-        
+
         $reservation = new Reservation();
-        
+
         // Set client if not admin
         if ($user instanceof Client) {
             $reservation->setClient($user);
@@ -58,8 +58,8 @@ final class ReservationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Calculate amount if not set
-            if ($reservation->getMontant() == 0 && $reservation->getVoiture()) {
+            // Always calculate amount automatically
+            if ($reservation->getDateDebut() && $reservation->getDateFin() && $reservation->getVoiture()) {
                 $days = $reservation->getDateDebut()->diff($reservation->getDateFin())->days + 1;
                 $montant = $days * $reservation->getVoiture()->getPrixParJour();
                 $reservation->setMontant($montant);
@@ -67,7 +67,7 @@ final class ReservationController extends AbstractController
 
             $em->persist($reservation);
             $em->flush();
-            
+
             $this->addFlash('success', 'Réservation créée avec succès!');
             return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -81,13 +81,20 @@ final class ReservationController extends AbstractController
         return $this->render('reservation/show.html.twig', ['reservation' => $reservation]);
     }
 
-    #[Route('/{id}/edit', name: 'app_reservation_edit', methods: ['GET','POST'])]
+    #[Route('/{id}/edit', name: 'app_reservation_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Reservation $reservation, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Recalculate amount automatically
+            if ($reservation->getDateDebut() && $reservation->getDateFin() && $reservation->getVoiture()) {
+                $days = $reservation->getDateDebut()->diff($reservation->getDateFin())->days + 1;
+                $montant = $days * $reservation->getVoiture()->getPrixParJour();
+                $reservation->setMontant($montant);
+            }
+
             $em->flush();
             return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -98,7 +105,7 @@ final class ReservationController extends AbstractController
     #[Route('/{id}', name: 'app_reservation_delete', methods: ['POST'])]
     public function delete(Request $request, Reservation $reservation, EntityManagerInterface $em): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$reservation->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $reservation->getId(), $request->request->get('_token'))) {
             $em->remove($reservation);
             $em->flush();
         }

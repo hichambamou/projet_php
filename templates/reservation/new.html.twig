@@ -37,16 +37,93 @@
                                 </div>
                             </div>
                         {% endif %}
+                        
+                        {# Read-only montant display #}
                         <div class="mb-3">
-                            {{ form_row(form.montant) }}
-                            <small class="text-muted">Le montant sera calculé automatiquement si laissé à 0</small>
+                            <div class="alert alert-info" id="montantDisplay" style="display: none;">
+                                <strong>Montant total :</strong> <span id="montantValue">0</span> MAD
+                                <small class="d-block mt-1">
+                                    <span id="daysInfo"></span>
+                                </small>
+                            </div>
                         </div>
                         
                         <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-primary">Créer la réservation</button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn" disabled>Créer la réservation</button>
                             <a href="{{ path('app_reservation_index') }}" class="btn btn-outline-secondary">Annuler</a>
                         </div>
                     {{ form_end(form) }}
+                    
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const dateDebutInput = document.querySelector('#reservation_dateDebut');
+                            const dateFinInput = document.querySelector('#reservation_dateFin');
+                            const voitureSelect = document.querySelector('#reservation_voiture');
+                            const montantDisplay = document.getElementById('montantDisplay');
+                            const montantValue = document.getElementById('montantValue');
+                            const daysInfo = document.getElementById('daysInfo');
+                            const submitBtn = document.getElementById('submitBtn');
+                            
+                            // Add price data attributes to vehicle options
+                            const vehiclePrices = {};
+                            voitureSelect.querySelectorAll('option').forEach(option => {
+                                if (option.value) {
+                                    // Price will be fetched via form data or added via controller
+                                    vehiclePrices[option.value] = parseFloat(option.getAttribute('data-price')) || 0;
+                                }
+                            });
+                            
+                            function calculateAmount() {
+                                const dateDebut = dateDebutInput ? dateDebutInput.value : '';
+                                const dateFin = dateFinInput ? dateFinInput.value : '';
+                                const voitureId = voitureSelect ? voitureSelect.value : '';
+                                
+                                // Hide display and disable submit if any field is missing
+                                if (!dateDebut || !dateFin || !voitureId) {
+                                    montantDisplay.style.display = 'none';
+                                    submitBtn.disabled = true;
+                                    return;
+                                }
+                                
+                                // Get price from selected vehicle
+                                const selectedOption = voitureSelect.options[voitureSelect.selectedIndex];
+                                const pricePerDay = parseFloat(selectedOption.getAttribute('data-price') || selectedOption.text.match(/(\d+(?:\.\d+)?)\s*MAD/)?.[1] || 0);
+                                
+                                if (pricePerDay === 0) {
+                                    // If price not in option, we'll let backend calculate
+                                    montantDisplay.style.display = 'none';
+                                    submitBtn.disabled = false;
+                                    return;
+                                }
+                                
+                                // Calculate number of days (inclusive)
+                                const start = new Date(dateDebut);
+                                const end = new Date(dateFin);
+                                const diffTime = end - start;
+                                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                                
+                                // Ensure at least 1 day
+                                const days = Math.max(1, diffDays);
+                                
+                                // Calculate total
+                                const total = days * pricePerDay;
+                                
+                                // Display
+                                montantValue.textContent = total.toFixed(2);
+                                daysInfo.textContent = `${days} jour${days > 1 ? 's' : ''} × ${pricePerDay.toFixed(2)} MAD/jour`;
+                                montantDisplay.style.display = 'block';
+                                submitBtn.disabled = false;
+                            }
+                            
+                            // Add event listeners
+                            if (dateDebutInput) dateDebutInput.addEventListener('change', calculateAmount);
+                            if (dateFinInput) dateFinInput.addEventListener('change', calculateAmount);
+                            if (voitureSelect) voitureSelect.addEventListener('change', calculateAmount);
+                            
+                            // Initial calculation if values are preset
+                            calculateAmount();
+                        });
+                    </script>
                 </div>
             </div>
         </div>

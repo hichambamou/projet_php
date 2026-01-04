@@ -43,11 +43,6 @@ class ReservationType extends AbstractType
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez entrer la date de fin.']),
                 ],
-            ])
-            ->add('montant', MoneyType::class, [
-                'label' => 'Montant (MAD)',
-                'currency' => 'MAD',
-                'attr' => ['class' => 'form-control']
             ]);
 
         if ($isAdmin) {
@@ -72,6 +67,9 @@ class ReservationType extends AbstractType
             'class' => Voiture::class,
             'choice_label' => function (Voiture $voiture) {
                 return $voiture->getMarque() . ' ' . $voiture->getModele() . ' (' . $voiture->getAnnee() . ')';
+            },
+            'choice_attr' => function (Voiture $voiture) {
+                return ['data-price' => $voiture->getPrixParJour()];
             },
             'query_builder' => function ($er) {
                 return $er->createQueryBuilder('v')
