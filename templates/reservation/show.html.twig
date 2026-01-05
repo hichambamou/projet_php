@@ -186,10 +186,25 @@
                     </div>
                     
                     <div class="d-grid gap-2 mt-4">
-                        {% if reservation.statut != 'annulee' %}
+                        {% if 'ROLE_ADMIN' in app.user.roles|default([]) and reservation.statut == 'en_attente' %}
+                            <form method="post" action="{{ path('app_reservation_confirm', {'id': reservation.id}) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('confirm' ~ reservation.id) }}">
+                                <button type="submit" class="btn btn-success w-100" onclick="return confirm('Êtes-vous sûr de vouloir confirmer cette réservation ?');">
+                                    <i class="bi bi-check-circle me-2"></i>Confirmer la réservation
+                                </button>
+                            </form>
+                        {% endif %}
+                        {% if reservation.statut == 'en_attente' %}
                             <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}" class="btn btn-primary">
                                 <i class="bi bi-pencil me-2"></i>Modifier la réservation
                             </a>
+                        {% elseif reservation.statut == 'confirmee' %}
+                            <form method="post" action="{{ path('app_reservation_cancel', {'id': reservation.id}) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('cancel' ~ reservation.id) }}">
+                                <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Êtes-vous sûr de vouloir annuler cette réservation confirmée ?');">
+                                    <i class="bi bi-x-circle me-2"></i>Annuler la réservation
+                                </button>
+                            </form>
                         {% endif %}
                         <a href="{{ path('app_reservation_index') }}" class="btn btn-outline-primary">
                             <i class="bi bi-arrow-left me-2"></i>Retour aux réservations

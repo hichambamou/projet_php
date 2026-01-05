@@ -1,0 +1,153 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Catégories - Admin{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Gestion des Catégories</h1>
+        <a href="{{ path('admin_categorie_new') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-2"></i>Nouvelle Catégorie
+        </a>
+    </div>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>{{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    <div class="card shadow">
+        <div class="card-body">
+            {% if categories is empty %}
+                <div class="text-center py-5">
+                    <i class="bi bi-folder-x display-1 text-muted"></i>
+                    <p class="mt-3 text-muted">Aucune catégorie trouvée.</p>
+                    <a href="{{ path('admin_categorie_new') }}" class="btn btn-primary mt-2">
+                        <i class="bi bi-plus-circle me-2"></i>Créer la première catégorie
+                    </a>
+                </div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nom</th>
+                                <th>Description</th>
+                                <th class="text-center">Nombre de Voitures</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in categories %}
+                                {% set categorie = result[0] %}
+                                {% set voitureCount = result.voitureCount %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ categorie.nom }}</strong>
+                                    </td>
+                                    <td>
+                                        <span class="text-muted">
+                                            {{ categorie.description ? categorie.description|length > 50 ? categorie.description|slice(0, 50) ~ '...' : categorie.description : 'Aucune description' }}
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-primary rounded-pill">{{ voitureCount }}</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="btn-group" role="group">
+                                            <a href="{{ path('admin_categorie_show', {'id': categorie.id}) }}" 
+                                               class="btn btn-sm btn-outline-info" 
+                                               title="Voir">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a href="{{ path('admin_categorie_edit', {'id': categorie.id}) }}" 
+                                               class="btn btn-sm btn-outline-primary" 
+                                               title="Modifier">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <button type="button" 
+                                                    class="btn btn-sm btn-outline-danger" 
+                                                    title="Supprimer"
+                                                    onclick="confirmDelete({{ categorie.id }}, '{{ categorie.nom }}', {{ voitureCount }})">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-3 text-muted">
+                    <small>Total : {{ categories|length }} catégorie{{ categories|length > 1 ? 's' : '' }}</small>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="{{ path('app_admin_index') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Retour au Dashboard
+        </a>
+    </div>
+</div>
+
+{# Delete confirmation modal and form #}
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmer la suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="deleteModalBody">
+                <!-- Content will be set dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form method="post" id="deleteForm" style="display: inline;">
+                    <input type="hidden" name="_token" id="deleteToken">
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmDelete(id, nom, voitureCount) {
+        const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        const form = document.getElementById('deleteForm');
+        const body = document.getElementById('deleteModalBody');
+        
+        if (voitureCount > 0) {
+            body.innerHTML = `
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <strong>Attention!</strong> Cette catégorie contient ${voitureCount} voiture${voitureCount > 1 ? 's' : ''}.
+                    Vous ne pouvez pas la supprimer.
+                </div>
+                <p>Veuillez d'abord supprimer ou réassigner les voitures associées.</p>
+            `;
+            document.querySelector('#deleteModal .btn-danger').style.display = 'none';
+        } else {
+            body.innerHTML = `<p>Êtes-vous sûr de vouloir supprimer la catégorie <strong>${nom}</strong> ?</p>`;
+            document.querySelector('#deleteModal .btn-danger').style.display = 'inline-block';
+            form.action = '{{ path('admin_categorie_delete', {'id': '__ID__'}) }}'.replace('__ID__', id);
+            document.getElementById('deleteToken').value = '{{ csrf_token("delete") }}' + id;
+        }
+        
+        modal.show();
+    }
+</script>
+{% endblock %}

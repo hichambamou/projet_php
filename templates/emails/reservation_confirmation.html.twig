@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation de réservation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .email-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .info-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #666;
+        }
+        .info-value {
+            color: #333;
+            font-weight: bold;
+        }
+        .vehicle-section {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .total-amount {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .total-amount h2 {
+            margin: 0;
+            font-size: 32px;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        @media only screen and (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>🚗 MarokiCars</h1>
+            <p style="margin: 10px 0 0 0; font-size: 18px;">Confirmation de réservation</p>
+        </div>
+        
+        <div class="content">
+            <h2 style="color: #667eea;">Bonjour {{ reservation.client.nom }},</h2>
+            
+            <p>Nous avons le plaisir de vous confirmer votre réservation !</p>
+            
+            <div style="text-align: center;">
+                <span class="badge">✓ Réservation Confirmée</span>
+            </div>
+            
+            <div class="info-box">
+                <h3 style="margin-top: 0; color: #667eea;">📋 Détails de la réservation</h3>
+                <div class="info-row">
+                    <span class="info-label">Numéro de réservation</span>
+                    <span class="info-value">#{{ reservation.id }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Statut</span>
+                    <span class="info-value" style="color: #38ef7d;">Confirmée</span>
+                </div>
+            </div>
+            
+            <div class="vehicle-section">
+                <h3 style="margin-top: 0; color: #667eea;">🚙 Véhicule réservé</h3>
+                <p style="font-size: 20px; font-weight: bold; margin: 10px 0;">
+                    {{ reservation.voiture.marque }} {{ reservation.voiture.modele }}
+                </p>
+                <p style="color: #666; margin: 5px 0;">
+                    Année: {{ reservation.voiture.annee }}
+                    {% if reservation.voiture.nombrePlaces %}
+                    • {{ reservation.voiture.nombrePlaces }} places
+                    {% endif %}
+                </p>
+            </div>
+            
+            <div class="info-box">
+                <h3 style="margin-top: 0; color: #667eea;">📅 Période de location</h3>
+                <div class="info-row">
+                    <span class="info-label">Date de début</span>
+                    <span class="info-value">{{ reservation.dateDebut|date('d/m/Y') }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Date de fin</span>
+                    <span class="info-value">{{ reservation.dateFin|date('d/m/Y') }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Durée totale</span>
+                    <span class="info-value">{{ reservation.dateDebut.diff(reservation.dateFin).days + 1 }} jour(s)</span>
+                </div>
+            </div>
+            
+            <div class="total-amount">
+                <p style="margin: 0; font-size: 14px; opacity: 0.9;">Montant total</p>
+                <h2>{{ reservation.montant }} MAD</h2>
+            </div>
+            
+            <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                <p style="margin: 0; color: #856404;">
+                    <strong>⚠️ Important :</strong> Votre réservation est maintenant confirmée. Vous ne pouvez plus modifier les dates. 
+                    Si vous devez annuler, veuillez nous contacter ou utiliser votre espace client.
+                </p>
+            </div>
+            
+            <p>Si vous avez des questions, n'hésitez pas à nous contacter.</p>
+            
+            <p style="margin-top: 30px;">
+                Cordialement,<br>
+                <strong>L'équipe MarokiCars</strong>
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p style="margin: 5px 0;">© 2026 MarokiCars - Location de véhicules</p>
+            <p style="margin: 5px 0;">Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+        </div>
+    </div>
+</body>
+</html>

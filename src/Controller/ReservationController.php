@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 #[Route('/reservation')]
 final class ReservationController extends AbstractController
@@ -84,6 +86,12 @@ final class ReservationController extends AbstractController
     #[Route('/{id}/edit', name: 'app_reservation_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Reservation $reservation, EntityManagerInterface $em): Response
     {
+        // Bloquer l'édition si la réservation est confirmée
+        if ($reservation->getStatut() === 'confirmee') {
+            $this->addFlash('error', 'Impossible de modifier une réservation confirmée. Vous pouvez uniquement l\'annuler.');
+            return $this->redirectToRoute('app_reservation_show', ['id' => $reservation->getId()]);
+        }
+
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
 
@@ -100,6 +108,65 @@ final class ReservationController extends AbstractController
         }
 
         return $this->render('reservation/edit.html.twig', ['reservation' => $reservation, 'form' => $form]);
+    }
+
+    #[Route('/{id}/confirm', name: 'app_reservation_confirm', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function confirm(Request $request, Reservation $reservation, EntityManagerInterface $em, MailerInterface $mailer): Response
+    {
+        if ($this->isCsrfTokenValid('confirm' . $reservation->getId(), $request->request->get('_token'))) {
+            $reservation->setStatut('confirmee');
+            $em->flush();
+
+            // Envoyer l'email de confirmation
+            try {
+                $email = (new Email())
+                    ->from('noreply@marokicars.com')
+                    ->to($reservation->getClient()->getEmail())
+                    ->subject('Confirmation de votre réservation #' . $reservation->getId())
+                    ->html($this->renderView('emails/reservation_confirmation.html.twig', [
+                        'reservation' => $reservation
+                    ]));
+
+                $mailer->send($email);
+                $this->addFlash('success', 'Réservation confirmée avec succès! Un email de confirmation a été envoyé au client.');
+            } catch (\Exception $e) {
+                $this->addFlash('warning', 'Réservation confirmée, mais l\'email n\'a pas pu être envoyé.');
+            }
+        }
+
+        return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/cancel', name: 'app_reservation_cancel', methods: ['POST'])]
+    public function cancel(Request $request, Reservation $reservation, EntityManagerInterface $em, MailerInterface $mailer): Response
+    {
+        if ($this->isCsrfTokenValid('cancel' . $reservation->getId(), $request->request->get('_token'))) {
+            $previousStatut = $reservation->getStatut();
+            $reservation->setStatut('annulee');
+            $em->flush();
+
+            // Envoyer un email d'annulation si la réservation était confirmée
+            if ($previousStatut === 'confirmee') {
+                try {
+                    $email = (new Email())
+                        ->from('noreply@marokicars.com')
+                        ->to($reservation->getClient()->getEmail())
+                        ->subject('Annulation de votre réservation #' . $reservation->getId())
+                        ->html($this->renderView('emails/reservation_cancellation.html.twig', [
+                            'reservation' => $reservation
+                        ]));
+
+                    $mailer->send($email);
+                } catch (\Exception $e) {
+                    // Silently fail email sending
+                }
+            }
+
+            $this->addFlash('success', 'Réservation annulée avec succès!');
+        }
+
+        return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{id}', name: 'app_reservation_delete', methods: ['POST'])]
